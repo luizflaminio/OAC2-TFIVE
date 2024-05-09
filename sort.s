@@ -1,7 +1,7 @@
 # sort function
 # saving registers
 # convention: x0=zero, x1=ra, sp=sp, x5-7=t0-2, x10-11=a0-1, x12-17=a2-7, x18-27=s2-11, x28-31=t3-6
-sort:       
+main:       
     addi    sp, sp, -20
     sw      ra,16(sp)
     sw      s6,12(sp)
@@ -9,8 +9,8 @@ sort:
     sw      s4,4(sp)
     sw      s3,0(sp)
 # move parameters
-    addi    s5, a0, 0
-    addi    s6, a1, 0
+    addi    s5, a0, 0               # a0 tem a posição inicial do array
+    addi    s6, a1, 0               # a1 tem o tamanho n
 # outer loop
     addi    s3, zero, 0
 for1tst:    
