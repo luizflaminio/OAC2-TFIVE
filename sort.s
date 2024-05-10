@@ -38,7 +38,8 @@ for2tst:
     add     t0, s5, t0
     lw      t1, 0(t0)
     lw      t2, 4(t0)
-    ble     t1, t2, exit2
+    blt     t1, t2, exit2
+    beq     t1, t2, exit2
 # pass parameters and call
     addi    a0,s5,0
     addi    a1,s4,0
