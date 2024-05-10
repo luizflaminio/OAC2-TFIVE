@@ -27,7 +27,9 @@ main:
 # outer loop
     addi    s3, zero, 0
 for1tst:    
-    bge     s3, s6, exit1
+    blt     s3, s6, continue
+    jal     zero, exit1
+continue:
 # inner loop
     addi    s4, s3, -1
 for2tst:
@@ -47,7 +49,7 @@ for2tst:
 # outer loop
 exit2:
     addi    s3, s3, 1       # i = i + 1
-    j       for1tst
+    jal     zero, for1tst
 # restoring registers
 exit1:
     lw      s3, 0(sp)
