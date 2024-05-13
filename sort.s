@@ -11,10 +11,11 @@
     .word 0x00000000C
     .word 0x000000004
     .text
-
 main:
     addi    a0, a0, %lo(.ARRAY)
-    addi    a1, a1, 6       
+    addi    a1, a1, 6 
+    jal     zero, sort 
+sort:     
     addi    sp, sp, -20
     sw      ra,16(sp)
     sw      s6,12(sp)
