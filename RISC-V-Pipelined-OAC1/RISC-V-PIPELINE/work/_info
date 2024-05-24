@@ -1,0 +1,1230 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V
+Eadder
+Z0 w1700411894
+Z1 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z2 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 473
+Z3 dC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE
+Z4 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/adder.vhd
+Z5 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/adder.vhd
+l0
+L4 1
+VG;Em@GfHjY[J@:72:kb642
+!s100 0d_CBhf^FdMHeNOWY<IVa2
+Z6 OV;C;2020.1;71
+32
+Z7 !s110 1701299541
+!i10b 1
+Z8 !s108 1701299541.000000
+Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/adder.vhd|
+Z10 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/adder.vhd|
+!i113 1
+Z11 o-work work -2002 -explicit
+Z12 tExplicit 1 CvgOpt 0
+Abehavior
+R1
+R2
+DEx4 work 5 adder 0 22 G;Em@GfHjY[J@:72:kb642
+!i122 473
+l21
+L11 27
+V?kL6hW4YlfVmH?1kI>dUz2
+!s100 nj[c=8`^W6gS2b8P4Ddg61
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Ealu
+Z13 w1700738973
+R1
+R2
+!i122 474
+R3
+Z14 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu.vhd
+Z15 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu.vhd
+l0
+L4 1
+V0Q9Vl`Y7?@ULaS5cDG4kQ3
+!s100 NY3Fej8<:Bgh2TS7ZdNZD2
+R6
+32
+R7
+!i10b 1
+R8
+Z16 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu.vhd|
+Z17 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu.vhd|
+!i113 1
+R11
+R12
+Aarch_ula
+R1
+R2
+DEx4 work 3 alu 0 22 0Q9Vl`Y7?@ULaS5cDG4kQ3
+!i122 474
+l33
+L17 79
+V`_SZ?@V>]n<hCfe:_fW6E2
+!s100 cPmd`5JKlFVWVo5=UXegn2
+R6
+32
+R7
+!i10b 1
+R8
+R16
+R17
+!i113 1
+R11
+R12
+Ealudec
+Z18 w1700427350
+R1
+R2
+!i122 475
+R3
+Z19 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu_dec.vhd
+Z20 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu_dec.vhd
+l0
+L4 1
+V2aiMQKL?>6:MU]7<Q9NYj1
+!s100 zE=hfA7Ob05=cB@OdI1Zi2
+R6
+32
+Z21 !s110 1701299542
+!i10b 1
+Z22 !s108 1701299542.000000
+Z23 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu_dec.vhd|
+Z24 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/alu_dec.vhd|
+!i113 1
+R11
+R12
+Abehave
+R1
+R2
+DEx4 work 6 aludec 0 22 2aiMQKL?>6:MU]7<Q9NYj1
+!i122 475
+l16
+L14 22
+VT>zUlTZ][J5_5R[NDLgkR1
+!s100 `m4HKEo^5LhnZ^D@eb_k?2
+R6
+32
+R21
+!i10b 1
+R22
+R23
+R24
+!i113 1
+R11
+R12
+Ebit_adder
+R0
+R1
+R2
+!i122 476
+R3
+Z25 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/bit_adder.vhd
+Z26 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/bit_adder.vhd
+l0
+L4 1
+VjVTUlW]5Ok5VOeM2A>lfm2
+!s100 C3TY;h21VCQcFB7jb`8SC3
+R6
+32
+R21
+!i10b 1
+R22
+Z27 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/bit_adder.vhd|
+Z28 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/bit_adder.vhd|
+!i113 1
+R11
+R12
+Abehavior
+R1
+R2
+DEx4 work 9 bit_adder 0 22 jVTUlW]5Ok5VOeM2A>lfm2
+!i122 476
+l12
+L11 6
+V`WOoW1lG5BHIa^IQNbWzJ1
+!s100 [`lTi51DPhac`kOXfdTY:2
+R6
+32
+R21
+!i10b 1
+R22
+R27
+R28
+!i113 1
+R11
+R12
+Econtroller
+Z29 w1700771866
+R1
+R2
+!i122 477
+R3
+Z30 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/controller.vhd
+Z31 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/controller.vhd
+l0
+L4 1
+VeY0@goj::3PJC[Y?4o?=[0
+!s100 8?fOb3S3<;^<iX>kIfh?_3
+R6
+32
+R21
+!i10b 1
+R22
+Z32 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/controller.vhd|
+Z33 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/controller.vhd|
+!i113 1
+R11
+R12
+Astruct
+R1
+R2
+DEx4 work 10 controller 0 22 eY0@goj::3PJC[Y?4o?=[0
+!i122 477
+l45
+L20 30
+VkGQ<05aRl^=MXUU6FC[i[3
+!s100 701eiANoRT[mhH472<;D]1
+R6
+32
+R21
+!i10b 1
+R22
+R32
+R33
+!i113 1
+R11
+R12
+Ed_register
+Z34 w1700784192
+R1
+R2
+!i122 478
+R3
+Z35 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/d_register.vhd
+Z36 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/d_register.vhd
+l0
+L5 1
+VoKAecM08VC_`RV<dZ6`<U2
+!s100 _adOlDFg<<;KUIK]28jBe2
+R6
+32
+R21
+!i10b 1
+R22
+Z37 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/d_register.vhd|
+Z38 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/d_register.vhd|
+!i113 1
+R11
+R12
+Acomportamental
+R1
+R2
+DEx4 work 10 d_register 0 22 oKAecM08VC_`RV<dZ6`<U2
+!i122 478
+l20
+Z39 L18 16
+VCM7j=Cn1:LX?`Gb8jlIJ_2
+!s100 ZS82@M=cg<g6c]ng5Fl4S0
+R6
+32
+R21
+!i10b 1
+R22
+R37
+R38
+!i113 1
+R11
+R12
+Edata_memory
+Z40 w1701299898
+Z41 DPx4 ieee 11 numeric_bit 0 22 G2;d`f^X6V]cQEn8_38:i1
+R1
+R2
+!i122 501
+R3
+Z42 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/data_memory.vhd
+Z43 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/data_memory.vhd
+l0
+L5 1
+VI9iNCkB=gD^CAUNnnMzO=1
+!s100 @OLSV]eW^EJzc[>98nHdj2
+R6
+32
+Z44 !s110 1701299920
+!i10b 1
+Z45 !s108 1701299919.000000
+Z46 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/data_memory.vhd|
+Z47 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/data_memory.vhd|
+!i113 1
+R11
+R12
+Abehavioral
+R41
+R1
+R2
+Z48 DEx4 work 11 data_memory 0 22 I9iNCkB=gD^CAUNnnMzO=1
+!i122 501
+l19
+L15 21
+Vk`9=S==ZdK6<AjGoRlMdz0
+!s100 ]CjN@>2_95PS^HBI1ZSco3
+R6
+32
+R44
+!i10b 1
+R45
+R46
+R47
+!i113 1
+R11
+R12
+Eextend
+Z49 w1700772615
+R1
+R2
+!i122 497
+R3
+Z50 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/extend.vhd
+Z51 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/extend.vhd
+l0
+L9 1
+V`_8IgY9]mMEFiN1>3XL:]0
+!s100 HPOn2Z9OVeUBVzVMW^cLC3
+R6
+32
+Z52 !s110 1701299545
+!i10b 1
+Z53 !s108 1701299545.000000
+Z54 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/extend.vhd|
+Z55 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/extend.vhd|
+!i113 1
+R11
+R12
+Abehavioral
+R1
+R2
+DEx4 work 6 extend 0 22 `_8IgY9]mMEFiN1>3XL:]0
+!i122 497
+l18
+L17 21
+VJENn9KFF[0I1i932>kF`_0
+!s100 [WI8A<lG0c9dVg:^6[`_W2
+R6
+32
+R52
+!i10b 1
+R53
+R54
+R55
+!i113 1
+R11
+R12
+Eforwarding_unit
+Z56 w1700777798
+R1
+R2
+!i122 480
+R3
+Z57 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/forwarding_unit.vhd
+Z58 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/forwarding_unit.vhd
+l0
+L4 1
+V=j5Me]zEP0k>ol4iWTV9S2
+!s100 ZnY]5[m8E:U1i2jVJ?SiL1
+R6
+32
+R21
+!i10b 1
+R22
+Z59 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/forwarding_unit.vhd|
+Z60 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/forwarding_unit.vhd|
+!i113 1
+R11
+R12
+Aforwarding_unit_arch
+R1
+R2
+DEx4 work 15 forwarding_unit 0 22 =j5Me]zEP0k>ol4iWTV9S2
+!i122 480
+l21
+L19 17
+V3mN6i;ff:KGSF4I96dMda3
+!s100 A^Ud7_iETCEP>5@L@jnoF2
+R6
+32
+R21
+!i10b 1
+R22
+R59
+R60
+!i113 1
+R11
+R12
+Ehazard_detection_unit
+Z61 w1700771454
+R1
+R2
+!i122 481
+R3
+Z62 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_detection_unit.vhd
+Z63 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_detection_unit.vhd
+l0
+L4 1
+VQ><bNDiFRe=V3CTa=clja0
+!s100 T3gJeIM?5aKb3nUN9W73@2
+R6
+32
+Z64 !s110 1701299543
+!i10b 1
+Z65 !s108 1701299543.000000
+Z66 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_detection_unit.vhd|
+Z67 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_detection_unit.vhd|
+!i113 1
+R11
+R12
+Ahazard_detection_unit_arch
+R1
+R2
+DEx4 work 21 hazard_detection_unit 0 22 Q><bNDiFRe=V3CTa=clja0
+!i122 481
+l22
+L18 15
+VoA<I;kdbOzBRO<95PEQLC3
+!s100 KAk=NFRYdQFWQ=LY]FhXA0
+R6
+32
+R64
+!i10b 1
+R65
+R66
+R67
+!i113 1
+R11
+R12
+Ehazard_unit
+Z68 w1700769907
+R1
+R2
+!i122 482
+R3
+Z69 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_unit.vhd
+Z70 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_unit.vhd
+l0
+L4 1
+Vk5A^IFobNXe<cPHI9WViK1
+!s100 4K5QcPh7jM2^4U:K2n:X62
+R6
+32
+R64
+!i10b 1
+R65
+Z71 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_unit.vhd|
+Z72 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/hazard_unit.vhd|
+!i113 1
+R11
+R12
+Ahazard_unit_arch
+R1
+R2
+DEx4 work 11 hazard_unit 0 22 k5A^IFobNXe<cPHI9WViK1
+!i122 482
+l53
+L26 55
+V4b_IBGf8U4L5bzQ1GB`MU1
+!s100 jDMKR8CQk?5@O9>>Nz:e;2
+R6
+32
+R64
+!i10b 1
+R65
+R71
+R72
+!i113 1
+R11
+R12
+Einstruction_memory
+Z73 w1700437347
+Z74 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+R1
+R2
+!i122 483
+R3
+Z75 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/instruction_memory.vhd
+Z76 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/instruction_memory.vhd
+l0
+L6 1
+V;J>P3PZE9Zdbd`ODj@H4d2
+!s100 Gf:`da;8XKERfR]hc^K>Z0
+R6
+32
+R64
+!i10b 1
+R65
+Z77 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/instruction_memory.vhd|
+Z78 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/instruction_memory.vhd|
+!i113 1
+R11
+R12
+Abehavioural
+R74
+R1
+R2
+DEx4 work 18 instruction_memory 0 22 ;J>P3PZE9Zdbd`ODj@H4d2
+!i122 483
+l34
+L16 21
+V9SgY70o_4`nWD@e8I[oFz3
+!s100 ?I>nNe09Tgi9B@1jNPfzC1
+R6
+32
+R64
+!i10b 1
+R65
+R77
+R78
+!i113 1
+R11
+R12
+Emaindec
+Z79 w1700435352
+R1
+R2
+!i122 498
+R3
+Z80 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/main_dec.vhd
+Z81 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/main_dec.vhd
+l0
+L3 1
+VT=WN;<OTa=iB2X><nzkN`2
+!s100 2efMb9D]j;WE;z^b03aS:1
+R6
+32
+R52
+!i10b 1
+R53
+Z82 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/main_dec.vhd|
+Z83 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/main_dec.vhd|
+!i113 1
+R11
+R12
+Abehave
+R1
+R2
+DEx4 work 7 maindec 0 22 T=WN;<OTa=iB2X><nzkN`2
+!i122 498
+l18
+L15 19
+Vm0U2F0ka>n>II9UAdYL_b0
+!s100 NBSl@0QmfW9ezh9>RiGCf1
+R6
+32
+R52
+!i10b 1
+R53
+R82
+R83
+!i113 1
+R11
+R12
+Emux2
+R79
+R1
+R2
+!i122 500
+R3
+Z84 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux2.vhd
+Z85 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux2.vhd
+l0
+L4 1
+Vi4fT3c]ozbbOU@eCflDXZ2
+!s100 nBID[ageK<D]QJoNZODE80
+R6
+32
+Z86 !s110 1701299546
+!i10b 1
+Z87 !s108 1701299546.000000
+Z88 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux2.vhd|
+Z89 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux2.vhd|
+!i113 1
+R11
+R12
+Abehave
+R1
+R2
+DEx4 work 4 mux2 0 22 i4fT3c]ozbbOU@eCflDXZ2
+!i122 500
+l14
+L13 4
+VWN4a:lRhalX8=0ja7=c`d3
+!s100 4H94RWl43:QFzM>I^26<`2
+R6
+32
+R86
+!i10b 1
+R87
+R88
+R89
+!i113 1
+R11
+R12
+Emux3
+R0
+R1
+R2
+!i122 484
+R3
+Z90 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux3.vhd
+Z91 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux3.vhd
+l0
+L4 1
+VMWQRYHN0nM;IdzMXMkKcL3
+!s100 =E?6i6l4`eK=o[Qjk656P3
+R6
+32
+R64
+!i10b 1
+R65
+Z92 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux3.vhd|
+Z93 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/mux3.vhd|
+!i113 1
+R11
+R12
+Abehave
+R1
+R2
+DEx4 work 4 mux3 0 22 MWQRYHN0nM;IdzMXMkKcL3
+!i122 484
+l16
+L15 7
+V`g38`]Vm@YCW1ilzUzNg:1
+!s100 D8h`:@FcSALSZZCXSTU5B3
+R6
+32
+R64
+!i10b 1
+R65
+R92
+R93
+!i113 1
+R11
+R12
+Epipe_regd
+Z94 w1700834181
+Z95 DPx4 ieee 9 math_real 0 22 gNk<PdFJ<XNPcfef`f?Z81
+R1
+R2
+!i122 485
+R3
+Z96 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerD.vhd
+Z97 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerD.vhd
+l0
+L5 1
+V2W:;jl:A`MUbZ0:BS@[zh2
+!s100 EM4TjNCzfE?hFnc2Cc?1X1
+R6
+32
+R64
+!i10b 1
+R65
+Z98 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerD.vhd|
+Z99 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerD.vhd|
+!i113 1
+R11
+R12
+Aregd
+R95
+R1
+R2
+DEx4 work 9 pipe_regd 0 22 2W:;jl:A`MUbZ0:BS@[zh2
+!i122 485
+l71
+L46 193
+V3fYho;i`NU3:BEQg9zd`:2
+!s100 kaaooZfZoAPh_CWHWjcST3
+R6
+32
+R64
+!i10b 1
+R65
+R98
+R99
+!i113 1
+R11
+R12
+Epipe_rege
+Z100 w1700772474
+R74
+R95
+R1
+R2
+!i122 486
+R3
+Z101 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerE.vhd
+Z102 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerE.vhd
+l0
+L6 1
+V0znOiG]H?ZARH^oiC9XK51
+!s100 BVSaA3d[DAaD3WROd4ER63
+R6
+32
+R64
+!i10b 1
+R65
+Z103 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerE.vhd|
+Z104 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerE.vhd|
+!i113 1
+R11
+R12
+Arege
+R74
+R95
+R1
+R2
+DEx4 work 9 pipe_rege 0 22 0znOiG]H?ZARH^oiC9XK51
+!i122 486
+l57
+L31 107
+Vz_gVKWb_o8;nOD;ZimZ;@2
+!s100 nT==1hEP9V4KYZ^ca@W=:2
+R6
+32
+R64
+!i10b 1
+R65
+R103
+R104
+!i113 1
+R11
+R12
+Epipe_regf
+Z105 w1701294015
+R95
+R1
+R2
+!i122 487
+R3
+Z106 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerF.vhd
+Z107 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerF.vhd
+l0
+L5 1
+VTek_5HN9[EGX6IMd2VWXa3
+!s100 gVR`_A0<cgOCk4T5HK<IM0
+R6
+32
+Z108 !s110 1701299544
+!i10b 1
+R65
+Z109 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerF.vhd|
+Z110 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerF.vhd|
+!i113 1
+R11
+R12
+Aregf
+R95
+R1
+R2
+DEx4 work 9 pipe_regf 0 22 Tek_5HN9[EGX6IMd2VWXa3
+!i122 487
+l34
+L19 42
+VClVe[5g?c`D2^jda`Fj5:3
+!s100 ER]4X0aNBj@nzz@n^Uf1J1
+R6
+32
+R108
+!i10b 1
+R65
+R109
+R110
+!i113 1
+R11
+R12
+Epipe_regm
+Z111 w1700772494
+R95
+R1
+R2
+!i122 488
+R3
+Z112 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerM.vhd
+Z113 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerM.vhd
+l0
+L6 1
+Vi48f=Z9W@zkj?]2zJK>Ci0
+!s100 H[X_zBQAW3UQhN:ec90j80
+R6
+32
+R108
+!i10b 1
+Z114 !s108 1701299544.000000
+Z115 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerM.vhd|
+Z116 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_registerM.vhd|
+!i113 1
+R11
+R12
+Aregm
+R95
+R1
+R2
+DEx4 work 9 pipe_regm 0 22 i48f=Z9W@zkj?]2zJK>Ci0
+!i122 488
+l54
+L29 97
+V`QHLke[4FUa9]9c1CC0j02
+!s100 3W^kA9U2jF?2dbn63QGVb0
+R6
+32
+R108
+!i10b 1
+R114
+R115
+R116
+!i113 1
+R11
+R12
+Epipeline_riscv
+Z117 w1701297430
+R95
+R1
+R2
+!i122 489
+R3
+Z118 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_riscv.vhd
+Z119 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_riscv.vhd
+l0
+L5 1
+VHQnPPXcAjDNOfN63MI0hl2
+!s100 BFf[i;_WGbJZiNY3i8h4V2
+R6
+32
+R108
+!i10b 1
+R114
+Z120 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_riscv.vhd|
+Z121 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/pipeline_riscv.vhd|
+!i113 1
+R11
+R12
+Astruct
+R95
+R1
+R2
+DEx4 work 14 pipeline_riscv 0 22 HQnPPXcAjDNOfN63MI0hl2
+!i122 489
+l281
+L20 452
+V1ijCjCG=6>=2_aY[PmQlN0
+!s100 F]]LJ18@Aic;BnJXN>2:_2
+R6
+32
+R108
+!i10b 1
+R114
+R120
+R121
+!i113 1
+R11
+R12
+Ereg_1bit
+Z122 w1700785340
+R1
+R2
+!i122 490
+R3
+Z123 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/reg_1bit.vhd
+Z124 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/reg_1bit.vhd
+l0
+L5 1
+VDk3OF8>eHI>fbF>QKUOl@2
+!s100 Ta_KE;;ZG0HXikTd?gTjI0
+R6
+32
+R108
+!i10b 1
+R114
+Z125 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/reg_1bit.vhd|
+Z126 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/reg_1bit.vhd|
+!i113 1
+R11
+R12
+Acomportamental
+R1
+R2
+DEx4 work 8 reg_1bit 0 22 Dk3OF8>eHI>fbF>QKUOl@2
+!i122 490
+l17
+L15 16
+VdklnMETR`TgShHlj4XQI[0
+!s100 8T_mib4Gj5L2TiZI04^Zg2
+R6
+32
+R108
+!i10b 1
+R114
+R125
+R126
+!i113 1
+R11
+R12
+Eregfile
+Z127 w1701294026
+R74
+R95
+R1
+R2
+!i122 499
+R3
+Z128 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/regfile.vhd
+Z129 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/regfile.vhd
+l0
+L6 1
+VgTF>YbgdZZV<fOg^ISMHL0
+!s100 ncP98XH4VhVIOm<_jT?5b2
+R6
+32
+R86
+!i10b 1
+R53
+Z130 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/regfile.vhd|
+Z131 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/regfile.vhd|
+!i113 1
+R11
+R12
+Aregfile_arch
+R74
+R95
+R1
+R2
+DEx4 work 7 regfile 0 22 gTF>YbgdZZV<fOg^ISMHL0
+!i122 499
+l28
+L21 31
+VJM8cC^TA6OzCRY>U]XZeX1
+!s100 Rn?G[Xh0jlc6Di_Kj6z_`2
+R6
+32
+R86
+!i10b 1
+R53
+R130
+R131
+!i113 1
+R11
+R12
+Eregistrador_n
+Z132 w1700709706
+R1
+R2
+!i122 78
+R3
+R35
+R36
+l0
+L5 1
+Vf3?b`2<8oMfLL`;>dMzGz1
+!s100 21KOSGzK[Agn?4Q@m>TU43
+R6
+32
+Z133 !s110 1700771876
+!i10b 1
+Z134 !s108 1700771876.000000
+R37
+R38
+!i113 1
+R11
+R12
+Acomportamental
+R1
+R2
+DEx4 work 13 registrador_n 0 22 f3?b`2<8oMfLL`;>dMzGz1
+!i122 78
+l20
+R39
+V;07eC4VJj]2U<[RI[Wgj92
+!s100 KzoITi9:_[QFnDLVdi3ia1
+R6
+32
+R133
+!i10b 1
+R134
+R37
+R38
+!i113 1
+R11
+R12
+Estage_d
+Z135 w1701294042
+R95
+R1
+R2
+!i122 492
+R3
+Z136 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_D.vhd
+Z137 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_D.vhd
+l0
+L5 1
+VBh?k^67oQ@co8OK2ART6h3
+!s100 l10:eonkcDOXfE2cfcC:T0
+R6
+32
+R108
+!i10b 1
+R114
+Z138 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_D.vhd|
+Z139 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_D.vhd|
+!i113 1
+R11
+R12
+Abehav
+R95
+R1
+R2
+DEx4 work 7 stage_d 0 22 Bh?k^67oQ@co8OK2ART6h3
+!i122 492
+l73
+L28 90
+VZmR=;5MUJl^ShZ_z>;3lJ3
+!s100 TeKjzb4g8b?Z>jEg0aCKP3
+R6
+32
+R108
+!i10b 1
+R114
+R138
+R139
+!i113 1
+R11
+R12
+Estage_e
+Z140 w1700766445
+R95
+R1
+R2
+!i122 493
+R3
+Z141 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_E.vhd
+Z142 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_E.vhd
+l0
+L5 1
+VmPXoKdF^=_9m4Xkic^IbA2
+!s100 6oAgTOe=S915iL^;`nTJm1
+R6
+32
+R52
+!i10b 1
+R114
+Z143 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_E.vhd|
+Z144 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_E.vhd|
+!i113 1
+R11
+R12
+Abehav
+R95
+R1
+R2
+DEx4 work 7 stage_e 0 22 mPXoKdF^=_9m4Xkic^IbA2
+!i122 493
+l79
+L32 110
+VfU>N6:T`ojbV8RK2A]D=j1
+!s100 M[KEiWU_WnIDVgd8ikk@z1
+R6
+32
+R52
+!i10b 1
+R114
+R143
+R144
+!i113 1
+R11
+R12
+Estage_f
+Z145 w1700776801
+R95
+R1
+R2
+!i122 494
+R3
+Z146 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_F.vhd
+Z147 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_F.vhd
+l0
+L5 1
+VFKFIDS=CToA;Lo_5J4ZT[0
+!s100 e>o[Al=03Y;nRbZL4n>kN1
+R6
+32
+R52
+!i10b 1
+R53
+Z148 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_F.vhd|
+Z149 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_F.vhd|
+!i113 1
+R11
+R12
+Abehav
+R95
+R1
+R2
+DEx4 work 7 stage_f 0 22 FKFIDS=CToA;Lo_5J4ZT[0
+!i122 494
+l56
+L17 78
+Vh57SzCzN^8;e1lBjGB[370
+!s100 mVf5@gC4`_:OkZl?GhfdA2
+R6
+32
+R52
+!i10b 1
+R53
+R148
+R149
+!i113 1
+R11
+R12
+Estage_w
+Z150 w1700739908
+R95
+R1
+R2
+!i122 495
+R3
+Z151 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_W.vhd
+Z152 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_W.vhd
+l0
+L5 1
+VG_d0F_K^z33V7bjAFB`1<1
+!s100 JWUVI^?zUUhRU=>f;=<:k0
+R6
+32
+R52
+!i10b 1
+R53
+Z153 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_W.vhd|
+Z154 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/stage_W.vhd|
+!i113 1
+R11
+R12
+Abehav
+R95
+R1
+R2
+DEx4 work 7 stage_w 0 22 G_d0F_K^z33V7bjAFB`1<1
+!i122 495
+l33
+L20 28
+Voi>3_n^S_a`5f8i[V_DNL2
+!s100 lLj82<l2Wk?a]=n6>j?]e3
+R6
+32
+R52
+!i10b 1
+R53
+R153
+R154
+!i113 1
+R11
+R12
+Etestbench
+R117
+R41
+R1
+R2
+!i122 491
+R3
+Z155 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/riscv_tb.vhd
+Z156 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/riscv_tb.vhd
+l0
+L5 1
+V`]]YRNlZPhZ?cUeP1_ffV2
+!s100 e;gHcPgA]`<V8;?Rf^FVA0
+R6
+32
+R108
+!i10b 1
+R114
+Z157 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/riscv_tb.vhd|
+Z158 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/riscv_tb.vhd|
+!i113 1
+R11
+R12
+Atest
+R41
+R1
+R2
+DEx4 work 9 testbench 0 22 `]]YRNlZPhZ?cUeP1_ffV2
+!i122 491
+l25
+L8 52
+V^YQAoaH5AoaFS<ARYCd;40
+!s100 Q<c^[iXdR;L1[6T9hchzM2
+R6
+32
+R108
+!i10b 1
+R114
+R157
+R158
+!i113 1
+R11
+R12
+Etop_level
+Z159 w1701299443
+R1
+R2
+!i122 496
+R3
+Z160 8C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/top_level.vhd
+Z161 FC:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/top_level.vhd
+l0
+L4 1
+VMdfSLVnTdOEPdZdEQ?znD3
+!s100 [HEXdYi9LolH4N]P@5R@Z0
+R6
+32
+R52
+!i10b 1
+R53
+Z162 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/top_level.vhd|
+Z163 !s107 C:/Users/jparr/Documents/Quadris/Quadri2/PCS3612/PCS3612-2023-EP4/RISC-V-PIPELINE/top_level.vhd|
+!i113 1
+R11
+R12
+Atest
+R1
+R2
+DEx4 work 9 top_level 0 22 MdfSLVnTdOEPdZdEQ?znD3
+!i122 496
+l53
+L14 78
+V?6L<>lJ]WXDY5PWRIYU=11
+!s100 dCZamhggS:WNPN<ZAIT0m1
+R6
+32
+R52
+!i10b 1
+R53
+R162
+R163
+!i113 1
+R11
+R12
