@@ -20,8 +20,12 @@ entity estagio_id is
         -- Desvios
         forward_id      : in std_logic_vector(1 downto 0); -- Sinaliza se há encaminhamento e qual registrador tem conflito
         alu_result_ex   : in  std_logic_vector(31 downto 0); -- Dado que deve ser considerado para o cálculo de desvio ou salto
-        -- Saída
-        bex             : out std_logic_vector(308 downto 0) -- Dadso do estágio ID para o estágio EX
+        -- Saídas
+        stall_f         : out std_logic; -- Stall do Program Counter
+        stall_d         : out std_logic; -- Stall do registrador IF/ID
+        flush_d         : out std_logic; -- Clear do registrador de estágio IF/ID
+        flush_e         : out std_logic; -- Clear do registrador de estágio ID/EX
+        bex             : out std_logic_vector(304 downto 0) -- Dadso do estágio ID para o estágio EX
     );
 end entity estagio_id;
 
