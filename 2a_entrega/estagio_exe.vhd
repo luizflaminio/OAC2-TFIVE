@@ -25,7 +25,7 @@ entity estagio_exe is
     FowardB : out std_logic_vector(1 downto 0); -- determina a origem do segundo operando da ALU
     ForwardId : out std_logic_vector(1 downto 0); -- informa ao ID se há forwarding
     -- Saídas
-    bex : out std_logic_vector(101 downto 0); -- barramento de entrada do estágio MEM
+    bem : out std_logic_vector(101 downto 0); -- barramento de entrada do estágio MEM
   );
 end entity estagio_exe;
 
