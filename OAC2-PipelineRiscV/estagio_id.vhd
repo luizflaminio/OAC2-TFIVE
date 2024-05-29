@@ -25,7 +25,9 @@ entity estagio_id is
         stall_d         : out std_logic; -- Stall do registrador IF/ID
         flush_d         : out std_logic; -- Clear do registrador de estágio IF/ID
         flush_e         : out std_logic; -- Clear do registrador de estágio ID/EX
+        instrucao_valida: out std_logic; -- Sinal acionado para o caso de interrupção de instrução desconhecida
         bex             : out std_logic_vector(304 downto 0) -- Dadso do estágio ID para o estágio EX
     );
 end entity estagio_id;
+
 
