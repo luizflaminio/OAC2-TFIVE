@@ -101,7 +101,7 @@ begin
 		port map(
 			d0 => s_pc_plus_4, -- PC + 4
 			d1 => id_Jump_PC, -- endereço de JUMP
-			d2 => x"00000000000000000001000000010011", -- NOP
+			d2 => x"00000400", -- endereço do NOP
 			s  => s_pc_src_mux_s,
 			y  => s_pc_mux
 		);
