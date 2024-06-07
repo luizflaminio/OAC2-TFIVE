@@ -48,8 +48,78 @@ end entity;
 
 architecture behav of estagio_if is
 
-	signal 
+	-- componentes necessários 
+	component d_register is 
+		generic(
+			constant N	: integer := 8
+		);
+		port(
+			clock	: in std_logic;
+			reset	: in std_logic;
+			load	: in std_logic;
+			D			: in std_logic_vector(31 downto 0);
+			Q			: out std_logic_vector(31 downto 0)
+		);
+	end component;
+
+	component mux3 is
+		generic(
+			width	: integer
+		);
+		port(
+			d0, d1, d2 : in std_logic_vector(width-1 downto 0);
+			s		   		 : in std_logic_vector(1 downto 0);
+			y			     : out std_logic_vector(width-1 downto 0)
+		);
+	end component;
+
+	component adder is
+		port(
+			A, B	: in std_logic_vector(31 downto 0);
+			sum		: out std_logic_vector(31 downto 0)
+		);
+	end component;
+	
+	component imem is
+		port(
+			clock	  : in std_logic;
+			address	: in std_logic_vector(31 downto 0);
+			data	  : out std_logic_vector(31 downto 0)
+		);
+	end component;
+
+	signal s_pc_enable : std_logic
+	signal s_pc_src_mux_s : std_logic_vector(1 downto 0);
+	signal s_pc_src, s_pc_plus_4, s_pc_mux, s_PC : std_logic_vector(31 downto 0);
 
 begin
+
+	pc_src_mux: mux3
+		generic map(
+			width => 32
+		)
+		port map(
+			d0 => s_pc_plus_4, -- PC + 4
+			d1 => id_Jump_PC, -- endereço de JUMP
+			d2 => x"00000000000000000001000000010011", -- NOP
+			s  => s_pc_src_mux_s,
+			y  => s_pc_mux
+		);
+
+	s_pc_src_mux_s <= "10" when id_Branch_nop = '1' else 
+										"01" when id_PC_Src = '1' else
+										"00";
+
+	pc_reg: d_register
+		generic map(
+			N => 32
+		)
+		port map(
+			clock	=> clock,
+			reset	=> not keep_simulating,
+			load	=> not id_hd_hazard,
+			D			=> s_pc_mux,
+			Q			=> s_PC
+		);
 
 end behav ; -- behav
