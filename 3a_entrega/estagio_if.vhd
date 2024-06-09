@@ -58,7 +58,7 @@ architecture behav of estagio_if is
             reset   : in std_logic;
             load    : in std_logic;
             D       : in std_logic_vector(31 downto 0);
-            Q       : out std_logic_vector(31 downto 0)
+            Q       : out std_logic_vector(31 downto 0) := (others => '0')
         );
     end component;
 
@@ -69,7 +69,7 @@ architecture behav of estagio_if is
         port(
             d0, d1, d2 : in std_logic_vector(width-1 downto 0);
             s           : in std_logic_vector(1 downto 0);
-            y           : out std_logic_vector(width-1 downto 0)
+            y           : out std_logic_vector(width-1 downto 0) := (others => '0')
         );
     end component;
 
@@ -99,8 +99,9 @@ architecture behav of estagio_if is
     end component;
 
     signal s_pc_enable, s_reset : std_logic;
-    signal s_pc_src_mux_s : std_logic_vector(1 downto 0);
-    signal s_pc_src, s_pc_plus_4, s_pc_mux, s_PC, s_instruction : std_logic_vector(31 downto 0);
+    signal s_pc_src_mux_s : std_logic_vector(1 downto 0) := "00";
+    signal s_instruction : std_logic_vector(31 downto 0);
+    signal s_PC, s_pc_plus_4, s_pc_mux: std_logic_vector(31 downto 0) := x"00000000";	
 
 begin
 
@@ -109,7 +110,7 @@ begin
             width => 32
         )
         port map(
-            d0 => s_pc_plus_4, -- PC + 4
+            d0 => s_PC, -- PC + 4
             d1 => id_Jump_PC, -- endereço de JUMP
             d2 => x"00000020", -- endereço do NOP
             s  => s_pc_src_mux_s,
@@ -128,10 +129,10 @@ begin
             clock   => clock,
             reset   => s_reset,
             load    => '1',
-            D       => s_pc_mux,
+            D       => s_pc_plus_4,
             Q       => s_PC
         );
-    
+        
     s_reset <= '0' when keep_simulating else '1';
 
     imem: ram
@@ -143,7 +144,7 @@ begin
         port map(
             clock       => clock,
             write       => '0',
-            address     => s_PC,
+            address     => s_pc_mux,
             data_in     => (others => '0'),
             data_out    => s_instruction
         );
@@ -151,7 +152,7 @@ begin
     -- Adicionando 4 ao PC
     adder_inst: adder
         port map(
-            A   => s_PC,
+            A   => s_pc_mux,
             B   => x"00000004",
             sum => s_pc_plus_4
         );
@@ -161,7 +162,7 @@ begin
     begin
         if rising_edge(clock) then
             if keep_simulating then
-					BID <= s_instruction & s_pc_plus_4; -- Concatenação da instrução e PC
+                    BID <= s_pc_plus_4 & s_instruction; -- Concatenação da instrução e PC
             end if;
         end if;
     end process;
