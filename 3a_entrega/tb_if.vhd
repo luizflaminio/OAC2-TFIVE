@@ -212,6 +212,5 @@ begin
 		report " " ;											 -- Pula uma linha no conslole de saída	
 
         wait;
-        keep_simulating <= false;
     end process;
 end tb;   
