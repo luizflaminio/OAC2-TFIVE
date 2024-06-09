@@ -69,7 +69,7 @@ architecture behav of estagio_if is
         port(
             d0, d1, d2 : in std_logic_vector(width-1 downto 0);
             s           : in std_logic_vector(1 downto 0);
-            y           : out std_logic_vector(width-1 downto 0) := (others => '0')
+            y           : out std_logic_vector(width-1 downto 0)
         );
     end component;
 
@@ -132,7 +132,7 @@ begin
             D       => s_pc_plus_4,
             Q       => s_PC
         );
-        
+
     s_reset <= '0' when keep_simulating else '1';
 
     imem: ram
