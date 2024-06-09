@@ -2,6 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
+use ieee.numeric_std.all;
+
+library work;
+use work.utils.all;
  
 entity tb_if is
 end entity; 
@@ -40,7 +44,7 @@ begin
 
     DUT: estagio_if 
         generic map(
-            imem_init_file => "imem.txt"
+            imem_init_file => "./imem.txt"
         )
         port map(
             --Entradas
@@ -85,7 +89,7 @@ begin
 		
         wait for clock_period;		  -- ciclo 3 = 40 ns	leitura da 3a. instrucao do swap
         report "Testando se instrução na posição 2 está correta";
-        assert BID(31downto 00) = x"00259293" severity error;	 -- Testa se a instrucao é: slli t0, a1, 2 
+        assert BID(31 downto 00) = x"00259293" severity error;	 -- Testa se a instrucao é: slli t0, a1, 2 
 		report "RI_if = " & to_hex_string(BID(31 downto 00));	 -- Este é o código de máquina no ri_if = x"00259293"
         report "Testando se saída tem PC+4";
         assert BID(63 downto 32) = x"00000008" severity error;	 -- Testa se PC = x"00000008"
@@ -208,5 +212,6 @@ begin
 		report " " ;											 -- Pula uma linha no conslole de saída	
 
         wait;
+        keep_simulating <= false;
     end process;
 end tb;   
