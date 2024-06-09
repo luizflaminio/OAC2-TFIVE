@@ -11,7 +11,7 @@ entity d_register is
         reset  : in  std_logic;
         load : in  std_logic;
         D      : in  std_logic_vector (N-1 downto 0);
-        Q      : out std_logic_vector (N-1 downto 0)
+        Q      : out std_logic_vector (N-1 downto 0) := (others => '0')
     );
 end entity d_register;
 
