@@ -146,7 +146,7 @@ begin
         port map(
             clock       => clock,
             write       => '0',
-            address     => s_pc_mux,
+            address     => s_PC,
             data_in     => (others => '0'),
             data_out    => s_instruction
         );
