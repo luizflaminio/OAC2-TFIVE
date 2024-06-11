@@ -164,7 +164,7 @@ begin
     begin
         if rising_edge(clock) then
             if keep_simulating then
-                    BID <= s_pc_plus_4 & s_instruction; -- Concatenação da instrução e PC
+                    BID <= s_PC & s_instruction; -- Concatenação da instrução e PC
             end if;
         end if;
     end process;
