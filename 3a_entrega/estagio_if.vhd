@@ -62,14 +62,21 @@ architecture behav of estagio_if is
         );
     end component;
 
-    component mux3 is
-        generic(
-            width   : integer
-        );
+    component mux2 is
+        generic(width: integer := 8);
         port(
-            d0, d1, d2 : in std_logic_vector(width-1 downto 0);
-            s           : in std_logic_vector(1 downto 0);
-            y           : out std_logic_vector(width-1 downto 0)
+            d0, d1 : in STD_LOGIC_VECTOR(width-1 downto 0);
+            s      : in STD_LOGIC;
+            y      : out STD_LOGIC_VECTOR(width-1 downto 0) := (others => '0')
+        );
+    end component;
+
+    component mux4 is
+        generic(width: integer := 8);
+        port(
+            d0, d1, d2, d3 : in STD_LOGIC_VECTOR(width-1 downto 0);
+            s      : in STD_LOGIC_VECTOR(1 downto 0);
+            y      : out STD_LOGIC_VECTOR(width-1 downto 0) := (others => '0')
         );
     end component;
 
@@ -98,32 +105,35 @@ architecture behav of estagio_if is
         );
     end component;
 
-    signal s_pc_enable, s_reset : std_logic;
-    signal s_pc_src_mux_s : std_logic_vector(1 downto 0) := "00";
+    signal s_pc_enable, s_reset, s_load_reg : std_logic;
+    signal s_mux_src_pc : std_logic_vector(1 downto 0) := "00";
     signal s_instruction : std_logic_vector(31 downto 0);
+    signal ri_if : std_logic_vector(31 downto 0);
     signal s_PC  : std_logic_vector(31 downto 0) := x"00000000";
     signal s_pc_plus_4  : std_logic_vector(31 downto 0);
     signal s_pc_mux  : std_logic_vector(31 downto 0);
 
 begin
-    
-    pc_src_mux: mux3
+
+    pc_src_mux: mux4
         generic map(
             width => 32
         )
         port map(
-            d0 => s_pc_plus_4, -- PC + 4
-            d1 => id_Jump_PC, -- endereço de JUMP
-            d2 => x"00000020", -- endereço do NOP
-            s  => s_pc_src_mux_s,
+            d0 => s_pc_plus_4, -- PC
+            d1 => s_PC, -- PC + 4
+            d2 => id_Jump_PC, -- endereço de JUMP
+            d3 => x"00000400", -- endereco de interrupção, 
+            s  => s_mux_src_pc,
             y  => s_pc_mux
         );
 
-    s_pc_src_mux_s <= "10" when id_Branch_nop = '1' else 
-                      "01" when id_PC_Src = '1' else
-                      "00";
+    s_mux_src_pc <= "10" when id_Branch_nop = '1' else
+                    -- "11" when interrupt = '1' and id_PC_src = '1' else
+                    "01" when id_hd_hazard = '1' and id_PC_src = '0' else
+                    "00";
 
-    pc_plus_4_reg: d_register
+    pc_reg: d_register
         generic map(
             N => 32
         )
@@ -151,6 +161,17 @@ begin
             data_out    => s_instruction
         );
 
+    ri_mux: mux2
+        generic map(
+            width => 32
+        )
+        port map(
+            d0 => s_instruction, -- instrução
+            d1 => x"00000000", -- NOP
+            s  => id_hd_hazard,
+            y  => ri_if
+        );
+
     -- Adicionando 4 ao PC
     adder_inst: adder
         port map(
@@ -162,9 +183,9 @@ begin
     -- Processo para atualizar o BID
     process(clock)
     begin
-        if rising_edge(clock) then
+        if falling_edge(clock) then
             if keep_simulating then
-                    BID <= s_PC & s_instruction; -- Concatenação da instrução e PC
+                    BID <= s_PC & ri_if; -- Concatenação da instrução e PC
             end if;
         end if;
     end process;
