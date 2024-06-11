@@ -37,7 +37,7 @@ end component;
 	signal id_Branch_nop	: std_logic;
 	signal id_PC_Src		: std_logic;
 	signal id_Jump_PC		: std_logic_vector(31 downto 0);
-	signal Keep_simulating	: boolean 	:= true;
+	signal Keep_simulating	: boolean 	:= false;
 
 begin
     clock <= not clock after clock_period / 2;
@@ -66,8 +66,6 @@ begin
 		id_PC_Src 		<= '0';		    -- Nao é instrucao de desvio ou pulo
 		id_Jump_PC 		<= x"00000000"; -- Se tiver que pular o próximo endereço será x"00000000"
 		keep_simulating <= true;		-- Mantenha simulacao ativa 
-		
-		wait for clock_period;		 -- ciclo 1 = 0 ns	  espera um ciclo de relógio
 		
         wait for clock_period;		 -- ciclo 1 = 20 ns	  inicia a leitura da 1a. instrucao do programa swap
         report "Testando se instrução na posição 0 está correta";

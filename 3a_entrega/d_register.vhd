@@ -16,7 +16,7 @@ entity d_register is
 end entity d_register;
 
 architecture comportamental of d_register is
-    signal IQ: std_logic_vector(N-1 downto 0);
+    signal IQ: std_logic_vector(N-1 downto 0) := (others => '0');
 begin
 
 process(clock, reset, load, IQ)

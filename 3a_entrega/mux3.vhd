@@ -8,7 +8,7 @@ entity mux3 is
 	port(
 		d0, d1, d2 : in std_logic_vector(width-1 downto 0);
  		s 		   : in std_logic_vector(1 downto 0);
- 		y		   : out std_logic_vector(width-1 downto 0)
+ 		y		   : out std_logic_vector(width-1 downto 0) := (others => '0')
 	);
 end;
 
