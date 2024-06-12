@@ -115,6 +115,11 @@ architecture behav of estagio_if is
 
 begin
 
+    -- Como foi inserido o endereço de interrupção/exceção?
+    -- O endereço de interrupção é uma das entradas do mux que determina qual o PC a ser usado.
+    -- Não foi dado nenhum sinal que sinalize que uma interrupção aconteceu, então ainda não foi implementado
+    -- É a linha comentada no s_mux_src_pc
+
     pc_src_mux: mux4
         generic map(
             width => 32
@@ -133,6 +138,10 @@ begin
                     "01" when id_hd_hazard = '1' and id_PC_src = '0' else
                     "00";
 
+    -- Como se implementou a preservação do valor do PC?
+    -- O valor de PC é preservado ao desligar o load do registrador PC. Isso é feito também usando o sinal
+    -- id_hd_hazard. Se teve hazard, o registrador não deve salvar a entrada, do contrário ele salva
+    
     pc_reg: d_register
         generic map(
             N => 32
@@ -140,12 +149,13 @@ begin
         port map(
             clock   => clock,
             reset   => s_reset,
-            load    => '1',
+            load    => s_load_reg,
             D       => s_pc_mux,
             Q       => s_PC
         );
 
     s_reset <= '0' when keep_simulating else '1';
+    s_load_reg <= '1' when id_hd_hazard = '0' else '0';
 
     imem: ram
         generic map(
@@ -161,13 +171,17 @@ begin
             data_out    => s_instruction
         );
 
+    -- Como se implementou a inserção de NOPs?
+    -- o ri_mux decide a inserção de NOPs usando como entradas a instrução lida ou o NOP e o seletor do mux
+    -- é o sinal id_hd_hazard. Ou seja, tem hazard? Sim, então é NOP. Não, então é a instrução lida
+
     ri_mux: mux2
         generic map(
             width => 32
         )
         port map(
             d0 => s_instruction, -- instrução
-            d1 => x"00000000", -- NOP
+            d1 => x"00001013", -- NOP
             s  => id_hd_hazard,
             y  => ri_if
         );
@@ -180,14 +194,6 @@ begin
             sum => s_pc_plus_4
         );
 
-    -- Processo para atualizar o BID
-    process(clock)
-    begin
-        if falling_edge(clock) then
-            if keep_simulating then
-                    BID <= s_PC & ri_if; -- Concatenação da instrução e PC
-            end if;
-        end if;
-    end process;
+    BID <= s_PC & ri_if;
 
 end behav;
