@@ -66,7 +66,6 @@ begin
 		keep_simulating <= true;		-- Mantenha simulacao ativa 
 		
 		wait for clock_period;		 -- ciclo 1 = 0 ns espera um ciclo de relogio 
-		wait for clock_period/2;	 -- defasa as leitura de teste de 5 ns
 		
 		-- Situa�ao no instante 15 ns
         report "Testando se instrucao na posicao 0 esta correta";
@@ -158,10 +157,10 @@ begin
 		report " " ;											 -- Pula uma linha no console de saida 
 		
 		
-		wait for clock_period/2;
-		-- Situa�ao no instante 100 ns
 		id_Jump_PC 		<= x"00000040"; -- Se tiver que pular o proximo endereco sera x"00000040"
 		id_PC_Src 		<= '1';			
+		wait for clock_period/2;
+		-- Situa�ao no instante 100 ns
 		
 		
 		-- Situa�ao no instante 105 ns
@@ -175,8 +174,9 @@ begin
 		report " " ;											 -- Pula uma linha no console de saida
 		
 		-- Situa�ao no instante 110 ns
-		wait for clock_period/2;
 		id_PC_Src <= '0';
+		id_Branch_nop <= '1';	  -- ativa insercao de NOP no ri_if e BID
+		wait for clock_period/2;
 		
 		-- Situa�ao no instante 115 ns
 		wait for clock_period/2;		  -- ciclo 11 = 115 ns	 Teste de desvio lendo o endereco destino no PC
@@ -189,8 +189,8 @@ begin
 		report " " ;											 -- Pula uma linha no console de saida
 		
 		-- Situa�ao no instante 120 ns
+		id_Branch_nop <= '0';	  -- ativa insercao de NOP no ri_if e BID
 		wait for clock_period/2;
-		id_Branch_nop <= '1';	  -- ativa insercao de NOP no ri_if e BID
 		
 		-- Situa�ao no instante 125 ns
 		wait for clock_period/2;		  -- ciclo 12 = 125 ns	 Teste se esta inserindo NOP no ri e BID
@@ -203,8 +203,8 @@ begin
 		report " " ;											 	-- Pula uma linha no console de saida	
 		
 		-- Situa�ao no instante 130 ns
+		id_hd_hazard <= '1';	 -- Desativa insercao de NOP
 		wait for clock_period/2;
-		id_Branch_nop <= '0';	 -- Desativa insercao de NOP
 		
 		-- Situa�ao no instante 135 ns
 		wait for clock_period/2;		  -- ciclo 13 = 135 ns	 Teste se est� inserindo NOP no ri e BID
@@ -217,8 +217,8 @@ begin
 		report " " ;											 	-- Pula uma linha no console de saida
 		
 		-- Situa�ao no instante 140 ns
+		id_hd_hazard <= '0';	-- Ativa deteccao de conflito 
 		wait for clock_period/2;
-		id_hd_hazard <= '1';	-- Ativa deteccao de conflito 
 		
 		-- Situa�ao no instante 145 ns
 		wait for clock_period/2;		  -- ciclo 14 = 145 ns	 Teste de deteccao de conflito com acionamento do id_hd_Hazrd
@@ -231,8 +231,8 @@ begin
 		report " " ;											 -- Pula uma linha no console de saida	
 		
 		-- Situa�ao no instante 150 ns
+		-- id_hd_hazard <= '0';	-- Desativa detccao de conflito	
 		wait for clock_period/2;
-		id_hd_hazard <= '0';	-- Desativa detccao de conflito	
 
 		
 		-- Situa�ao no instante 155 ns
