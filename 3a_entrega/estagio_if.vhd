@@ -116,26 +116,25 @@ architecture behav of estagio_if is
 begin
 
     -- Como foi inserido o endereço de interrupção/exceção?
-    -- O endereço de interrupção é uma das entradas do mux que determina qual o PC a ser usado.
-    -- Não foi dado nenhum sinal que sinalize que uma interrupção aconteceu, então ainda não foi implementado
-    -- É a linha comentada no s_mux_src_pc
+    -- O endereço de interrupção é uma das entradas do mux que determina qual o PC a ser usado, é selecionado a partir do sinal id_Branch_nop
+    -- Já o endereço de exceção foi implementado como sujerido no enunciado, o endereço 0x00000400 e é selecionado pelo sinal id_PC_src
 
     pc_src_mux: mux4
         generic map(
             width => 32
         )
         port map(
-            d0 => s_pc_plus_4, -- PC
-            d1 => s_PC, -- PC + 4
+            d0 => s_pc_plus_4, -- PC + 4
+            d1 => s_PC, -- PC
             d2 => id_Jump_PC, -- endereço de JUMP
-            d3 => x"00000400", -- endereco de interrupção, 
+            d3 => x"00000400", -- endereco de exceção, 
             s  => s_mux_src_pc,
             y  => s_pc_mux
         );
 
     s_mux_src_pc <= "10" when id_Branch_nop = '1' else
-                    -- "11" when interrupt = '1' and id_PC_src = '1' else
-                    "01" when id_hd_hazard = '1' and id_PC_src = '0' else
+                    "11" when id_PC_src = '1' else
+                    "01" when id_hd_hazard = '1' else
                     "00";
 
     -- Como se implementou a preservação do valor do PC?
@@ -155,7 +154,7 @@ begin
         );
 
     s_reset <= '0' when keep_simulating else '1';
-    s_load_reg <= '1' when id_hd_hazard = '0' else '0';
+    s_load_reg <= not id_hd_hazard;
 
     imem: ram
         generic map(
@@ -181,7 +180,7 @@ begin
         )
         port map(
             d0 => s_instruction, -- instrução
-            d1 => x"00001013", -- NOP
+            d1 => x"00000000", -- NOP
             s  => id_hd_hazard,
             y  => ri_if
         );
