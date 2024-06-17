@@ -150,13 +150,12 @@ begin
         port map(
             clock   => clock,
             reset   => s_reset,
-            load    => s_load_reg,
+            load    => '1',
             D       => s_pc_mux,
             Q       => s_PC
         );
 
     s_reset <= '0' when keep_simulating else '1';
-    s_load_reg <= not id_hd_hazard;
 
     imem: ram
         generic map(
