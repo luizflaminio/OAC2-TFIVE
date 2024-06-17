@@ -8,6 +8,7 @@ use ieee.std_logic_signed.all;
 
 library work;
 use work.tipos.all;
+use work.opcode_converter.all;
 
 -- Especificaçao do estágio de BUSCA - if
 -- estágio de Busca de Instruções - if: neste estágio se encontra o PC(PC_if) (Contador de Programa) 
@@ -105,13 +106,14 @@ architecture behav of estagio_if is
         );
     end component;
 
-    signal s_pc_enable, s_reset, s_load_reg : std_logic;
+    signal s_reset, s_load_reg : std_logic;
     signal s_mux_src_pc : std_logic_vector(1 downto 0) := "00";
     signal s_instruction : std_logic_vector(31 downto 0);
     signal ri_if : std_logic_vector(31 downto 0);
     signal s_PC  : std_logic_vector(31 downto 0) := x"00000000";
     signal s_pc_plus_4  : std_logic_vector(31 downto 0);
     signal s_pc_mux  : std_logic_vector(31 downto 0);
+    signal COP_IF : instruction_type := NOP;
 
 begin
 
@@ -148,13 +150,12 @@ begin
         port map(
             clock   => clock,
             reset   => s_reset,
-            load    => s_load_reg,
+            load    => '1',
             D       => s_pc_mux,
             Q       => s_PC
         );
 
     s_reset <= '0' when keep_simulating else '1';
-    s_load_reg <= not id_hd_hazard;
 
     imem: ram
         generic map(
@@ -192,7 +193,7 @@ begin
             B   => x"00000004",
             sum => s_pc_plus_4
         );
-
+    COP_IF <= decode(ri_if);
     BID <= s_PC & ri_if;
 
 end behav;

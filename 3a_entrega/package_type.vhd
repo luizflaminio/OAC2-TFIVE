@@ -1,10 +1,10 @@
 ---------------------------------------------------------------------------------------
-----------Pacote para declaraçao do tipo de instruçoes---------------------------------
+----------Pacote para declaraï¿½ao do tipo de instruï¿½oes---------------------------------
 ---------------------------------------------------------------------------------------
 
--- Sessao de daclaraçao do package de tipos de instruçoes
+-- Sessao de daclaraï¿½ao do package de tipos de instruï¿½oes
 	package tipos is
-		--tipo e mnemônicos de instruçao
+		--tipo e mnemï¿½nicos de instruï¿½ao
     type instruction_type is (ADD, SLT,                     --tipo R
                               ADDI, SLTI, SLLI, SRLI, SRAI, --tipo I
                               LW,                           --tipo load
