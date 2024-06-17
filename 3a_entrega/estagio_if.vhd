@@ -106,7 +106,7 @@ architecture behav of estagio_if is
         );
     end component;
 
-    signal s_pc_enable, s_reset, s_load_reg : std_logic;
+    signal s_reset, s_load_reg : std_logic;
     signal s_mux_src_pc : std_logic_vector(1 downto 0) := "00";
     signal s_instruction : std_logic_vector(31 downto 0);
     signal ri_if : std_logic_vector(31 downto 0);
