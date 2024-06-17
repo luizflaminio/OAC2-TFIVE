@@ -8,6 +8,7 @@ use ieee.std_logic_signed.all;
 
 library work;
 use work.tipos.all;
+use work.opcode_converter.all;
 
 -- Especificaçao do estágio de BUSCA - if
 -- estágio de Busca de Instruções - if: neste estágio se encontra o PC(PC_if) (Contador de Programa) 
@@ -112,6 +113,7 @@ architecture behav of estagio_if is
     signal s_PC  : std_logic_vector(31 downto 0) := x"00000000";
     signal s_pc_plus_4  : std_logic_vector(31 downto 0);
     signal s_pc_mux  : std_logic_vector(31 downto 0);
+    signal COP_IF : instruction_type := NOP;
 
 begin
 
@@ -192,7 +194,7 @@ begin
             B   => x"00000004",
             sum => s_pc_plus_4
         );
-
+    COP_IF <= decode(ri_if);
     BID <= s_PC & ri_if;
 
 end behav;
