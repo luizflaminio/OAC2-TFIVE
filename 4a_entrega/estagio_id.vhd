@@ -157,10 +157,9 @@ architecture behav of estagio_id is
                     id_Jump_PC <= std_logic_vector(gpr_rs1 + signed(imm));
                     id_PC_src <= '1';
                     id_Branch_nop <-= '1';
-
                 end if;
                     
-                -- Forward data hazard - PARCIAL ?
+                -- Forward data hazard - NAO TENHO CRTZ NESSE
                 if (MemRead_ex = '1' and rd_ex = rs1) then
                     rs1_id_ex <= ula_ex;
                 elsif (MemRead_mem = '1' and rd_mem = rs1) then
