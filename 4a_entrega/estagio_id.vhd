@@ -117,7 +117,7 @@ architecture behav of estagio_id is
                     when "1100011" => -- BRANCH
                         imm <= instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0';
                     when "1101111" => -- JAL
-                        imm <= instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0'
+                        imm <= instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0';
                     when "1100111" => -- JALR
                         imm <= instruction(31 downto 20);
                     when others =>
@@ -131,19 +131,19 @@ architecture behav of estagio_id is
                             if (rs1_id_ex = rs2_id_ex) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1'
+                                id_Branch_nop <-= '1';
                             end if;
                         when "001" => -- BNE
                             if (rs1_id_ex /= rs2_id_ex) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1'
+                                id_Branch_nop <-= '1';
                             end if;
                         when "100" => -- BLT
                             if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1'
+                                id_Branch_nop <-= '1';
                             end if;
                     end case;
                 end if;
