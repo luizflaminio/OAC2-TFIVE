@@ -66,23 +66,142 @@ entity estagio_id is
 end entity;
 
 architecture behav of estagio_id is
-    signal s_instruction_rs1: std_logic_vector(4 downto 0);
-    signal s_instruction_rs2: std_logic_vector(4 downto 0);
+
+    component regfile is
+        port(
+            -- Entradas
+            clock			: 	in 		std_logic;						-- Base de tempo - Bancada de teste
+            RegWrite		: 	in 		std_logic; 						-- Sinal de escrita no RegFile
+            read_reg_rs1	: 	in 		std_logic_vector(04 downto 0);	-- Endere�o do registrador na sa�da RA
+            read_reg_rs2	: 	in 		std_logic_vector(04 downto 0);	-- Endere�o do registrador na sa�da RB
+            write_reg_rd	: 	in 		std_logic_vector(04 downto 0);	-- Endere�o do registrador a ser escrito
+            data_in			: 	in 		std_logic_vector(31 downto 0);	-- Valor a ser escrito no registrador
+            
+            -- Sa�das
+            data_out_a		: 	out 	std_logic_vector(31 downto 0);	-- Valor lido pelo endere�o rs1
+            data_out_b		: 	out 	std_logic_vector(31 downto 0) 	-- Valor lido pelo enderc�o rs2
+        );
+    end component;
+
+    -- Sinais para decodificação da instrução
+    signal instruction    : std_logic_vector(31 downto 0); 
+    signal PC_if          : std_logic_vector(31 downto 0);
+    signal opcode         : std_logic_vector(6 downto 0);
+    signal rs1, rs2, rd   : std_logic_vector(4 downto 0);
+    signal funct3         : std_logic_vector(2 downto 0);
+    signal funct7         : std_logic_vector(6 downto 0);
+    signal imm            : std_logic_vector(31 downto 0);
+    signal gpr_rs1       : std_logic_vector(31 downto 0);
 
     begin
-        s_instruction_rs1 <= BID(19 downto 15);
-        s_instruction_rs2 <= BID(24 downto 20);
-
-        hazard_unit: process(MemRead_ex, s_instruction_rs1, s_instruction_rs2, rd_ex)
+        -- Comportamental
+        process(clock)
         begin
-            if MemRead_ex = '1' and ((s_instruction_rs1 = rd_ex) or (s_instruction_rs2 = rd_ex)) then
-                id_hd_hazard <= '1';
-            else
-                id_hd_hazard <= '0';
-            end if;
-        end process hazard_unit;
+            if rising_edge(clock) then
+                
+                PC_if <= BID(63 downto 32);
 
-        rs1_id_ex <= s_instruction_rs1;
-        rs2_id_ex <= s_instruction_rs2;
+                -- Decodificação da instrução (INCOMPLETO)
+                instruction <= BID(31 downto 0);
+                opcode <= instruction(6 downto 0);
+                rd     <= instruction(11 downto 7);
+                funct3 <= instruction(14 downto 12);
+                rs1    <= instruction(19 downto 15);
+                rs2    <= instruction(24 downto 20);
+                funct7 <= instruction(31 downto 25);
+
+                -- Calculo do imediato
+                case opcode is
+                    when "0010011" => -- I-type
+                        imm <= instruction(31 downto 20);
+                    when "1100011" => -- BRANCH
+                        imm <= instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0';
+                    when "1101111" => -- JAL
+                        imm <= instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0'
+                    when "1100111" => -- JALR
+                        imm <= instruction(31 downto 20);
+                    when others =>
+                        imm <= (others => '0');
+                end case;
+
+                -- Desvios condicionais
+                if (opcode = "1100011") then -- BRANCH
+                    case funct3 is
+                        when "000" => -- BEQ
+                            if (rs1_id_ex = rs2_id_ex) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_PC_src <= '1';
+                                id_Branch_nop <-= '1'
+                            end if;
+                        when "001" => -- BNE
+                            if (rs1_id_ex /= rs2_id_ex) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_PC_src <= '1';
+                                id_Branch_nop <-= '1'
+                            end if;
+                        when "100" => -- BLT
+                            if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_PC_src <= '1';
+                                id_Branch_nop <-= '1'
+                            end if;
+                    end case;
+                end if;
+
+                -- Desvios incondicionais
+                if (opcode = "1101111") then -- JAL
+                    id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                    id_PC_src <= '1';
+                    id_Branch_nop <-= '1';
+                elsif (opcode = "1100111") then -- JALR
+                    id_Jump_PC <= std_logic_vector(gpr_rs1 + signed(imm));
+                    id_PC_src <= '1';
+                    id_Branch_nop <-= '1';
+
+                end if;
+                    
+                -- Forward data hazard - PARCIAL ?
+                if (MemRead_ex = '1' and rd_ex = rs1) then
+                    rs1_id_ex <= ula_ex;
+                elsif (MemRead_mem = '1' and rd_mem = rs1) then
+                    rs1_id_ex <= ula_mem;
+                elsif (RegWrite_wb = '1' and rd_wb = rs1) then
+                    rs1_id_ex <= writedata_wb;
+                else
+                    rs1_id_ex <= rs1;
+                end if;
+    
+                if (MemRead_ex = '1' and rd_ex = rs2) then
+                    rs2_id_ex <= ula_ex;
+                elsif (MemRead_mem = '1' and rd_mem = rs2) then
+                    rs2_id_ex <= ula_mem;
+                elsif (RegWrite_wb = '1' and rd_wb = rs2) then
+                    rs2_id_ex <= writedata_wb;
+                else
+                    rs2_id_ex <= rs2;
+                end if;
+
+                if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
+                    id_hd_hazard <= '1';
+                else
+                    id_hd_hazard <= '0';
+                end if;
+    
+            end if;
+        end process;
+
+        -- Estrutural
+        -- Sanar duvida: ha alguma escrida no regfile em ID?
+        regfile_inst: regfile
+            port map(
+                clock       => clock,
+                RegWrite    => '0',
+                read_reg_rs1=> rs1,
+                read_reg_rs2=> rs2,
+                write_reg_rd=> rd,
+                data_in     => (others => '0'),
+                data_out_a  => gpr_rs1,
+                data_out_b  => (others => '0')
+            );
 
 end architecture;
