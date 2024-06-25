@@ -178,7 +178,7 @@ architecture behav of estagio_id is
                 read_reg_rs1=> rs1,
                 read_reg_rs2=> rs2,
                 write_reg_rd=> rd,
-                data_in     => (others => '0'),
+                data_in     => writedata_wb,
                 data_out_a  => gpr_rs1,
                 data_out_b  => (others => '0')
             );
