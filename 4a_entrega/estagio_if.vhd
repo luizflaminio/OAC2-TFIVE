@@ -108,15 +108,6 @@ begin
     -- Como se implementou a inserção de NOPs?
     -- Se o sinal de hazard estiver ativo, passa-se adiante a inserção de bolhas
 
-    select_instruction: process(id_hd_hazard, s_instruction)
-        begin
-            if(id_hd_hazard = '0') then
-                ri_if <= s_instruction;
-            else
-            ri_if <= x"00000000"; -- NOP
-            end if;
-        end process;
-
     branch_process: process(s_instruction, id_Branch_nop)
         begin
             if(id_Branch_nop = '1') then
