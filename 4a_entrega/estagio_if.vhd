@@ -82,12 +82,10 @@ begin
 
     s_pc_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(s_PC)) + 4, s_pc_plus_4'length));
 
-    pc_source_process: process(id_Branch_nop, id_PC_src, s_pc_plus_4)
+    pc_source_process: process(id_PC_src, s_pc_plus_4)
         begin
-            if(id_Branch_nop = '1') then
+            if(id_PC_src = '1') then
                 s_pc_mux <= id_Jump_PC;
-            elsif(id_PC_src = '1') then
-                s_pc_mux <= x"00000400";
             else
                 s_pc_mux <= s_pc_plus_4;
             end if;
@@ -118,6 +116,15 @@ begin
             ri_if <= x"00000000"; -- NOP
             end if;
         end process;
+
+    branch_process: process(s_instruction, id_Branch_nop)
+        begin
+            if(id_Branch_nop = '1') then
+                ri_if <= x"00000000";
+            else
+                ri_if <= s_instruction;
+            end if;
+    end process;
     
     COP_IF <= decode(ri_if);
 
