@@ -158,27 +158,6 @@ architecture behav of estagio_id is
                     id_PC_src <= '1';
                     id_Branch_nop <-= '1';
                 end if;
-                    
-                -- Forward data hazard - NAO TENHO CRTZ NESSE
-                if (MemRead_ex = '1' and rd_ex = rs1) then
-                    rs1_id_ex <= ula_ex;
-                elsif (MemRead_mem = '1' and rd_mem = rs1) then
-                    rs1_id_ex <= ula_mem;
-                elsif (RegWrite_wb = '1' and rd_wb = rs1) then
-                    rs1_id_ex <= writedata_wb;
-                else
-                    rs1_id_ex <= rs1;
-                end if;
-    
-                if (MemRead_ex = '1' and rd_ex = rs2) then
-                    rs2_id_ex <= ula_ex;
-                elsif (MemRead_mem = '1' and rd_mem = rs2) then
-                    rs2_id_ex <= ula_mem;
-                elsif (RegWrite_wb = '1' and rd_wb = rs2) then
-                    rs2_id_ex <= writedata_wb;
-                else
-                    rs2_id_ex <= rs2;
-                end if;
 
                 if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                     id_hd_hazard <= '1';
@@ -188,19 +167,5 @@ architecture behav of estagio_id is
     
             end if;
         end process;
-
-        -- Estrutural
-        -- Sanar duvida: ha alguma escrida no regfile em ID?
-        regfile_inst: regfile
-            port map(
-                clock       => clock,
-                RegWrite    => '0',
-                read_reg_rs1=> rs1,
-                read_reg_rs2=> rs2,
-                write_reg_rd=> rd,
-                data_in     => (others => '0'),
-                data_out_a  => gpr_rs1,
-                data_out_b  => (others => '0')
-            );
 
 end architecture;
