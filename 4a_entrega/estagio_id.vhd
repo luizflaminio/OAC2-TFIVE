@@ -168,4 +168,19 @@ architecture behav of estagio_id is
             end if;
         end process;
 
+        -- Estrutural
+        -- Sanar duvida: ha alguma escrida no regfile em ID?
+        -- R: a escrita é controlada pelo estagio wb 
+        regfile_inst: regfile
+            port map(
+                clock       => clock,
+                RegWrite    => RegWrite_wb,
+                read_reg_rs1=> rs1,
+                read_reg_rs2=> rs2,
+                write_reg_rd=> rd,
+                data_in     => (others => '0'),
+                data_out_a  => gpr_rs1,
+                data_out_b  => (others => '0')
+            );
+
 end architecture;
