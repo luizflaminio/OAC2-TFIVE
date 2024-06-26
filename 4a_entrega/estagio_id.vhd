@@ -165,13 +165,13 @@ architecture behav of estagio_id is
                 -- Calculo do imediato
                 case opcode is
                     when "0010011" => -- I-type
-                        imm <= instruction(31 downto 20);
+                        imm <= std_logic_vector(resize(unsigned(instruction(31 downto 20)),32));
                     when "1100011" => -- BRANCH
-                        imm <= instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0';
+                        imm <= std_logic_vector(resize(unsigned(instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0'), 32));
                     when "1101111" => -- JAL
-                        imm <= instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0';
+                        imm <= std_logic_vector(resize(unsigned(instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0'), 32));
                     when "1100111" => -- JALR
-                        imm <= instruction(31 downto 20);
+                        imm <= std_logic_vector(resize(unsigned(instruction(31 downto 20)),32));
                     when others =>
                         imm <= (others => '0');
                 end case;
