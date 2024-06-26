@@ -67,6 +67,7 @@ architecture behav of estagio_if is
     end component;
     
     signal s_reset: std_logic;
+    signal s_halt: std_logic := '0';
     signal s_instruction : std_logic_vector(31 downto 0);
     signal ri_if : std_logic_vector(31 downto 0);
     signal s_PC  : std_logic_vector(31 downto 0) := x"00000000";
@@ -82,7 +83,7 @@ begin
 
     s_pc_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(s_PC)) + 4, s_pc_plus_4'length));
 
-    pc_source_process: process(id_PC_src, s_pc_plus_4)
+    pc_source_process: process(id_PC_src, s_pc_plus_4, id_Jump_PC)
         begin
             if(id_PC_src = '1') then
                 s_pc_mux <= id_Jump_PC;
@@ -97,7 +98,7 @@ begin
     pc_process: process(clock)
     begin
         if(rising_edge(clock)) then
-            if(id_hd_hazard = '0') then
+            if(id_hd_hazard = '0' and s_halt = '0') then
                 S_PC <= s_pc_mux;
             else
                 S_PC <= S_PC;
@@ -124,6 +125,12 @@ begin
         if(id_hd_hazard = '0' and rising_edge(clock)) then
             BID <= s_PC & ri_if;
         end if;
+    end process;
+
+    halt: process
+    begin
+        wait until (ri_if = x"0000006F" and falling_edge(clock));
+        s_halt <= '1';
     end process;
 
     imem: ram
