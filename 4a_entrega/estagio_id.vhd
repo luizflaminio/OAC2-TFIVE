@@ -85,30 +85,81 @@ architecture behav of estagio_id is
 
     -- Sinais para decodificação da instrução
     signal instruction    : std_logic_vector(31 downto 0); 
-    signal PC_if          : std_logic_vector(31 downto 0);
+    signal PC_id          : std_logic_vector(31 downto 0);
     signal opcode         : std_logic_vector(6 downto 0);
     signal rs1, rs2, rd   : std_logic_vector(4 downto 0);
     signal funct3         : std_logic_vector(2 downto 0);
     signal funct7         : std_logic_vector(6 downto 0);
     signal imm            : std_logic_vector(31 downto 0);
-    signal gpr_rs1       : std_logic_vector(31 downto 0);
+    signal gpr_rs1        : std_logic_vector(31 downto 0);
+    signal base           : std_logic_vector(4 downto 0);
+    signal offset         : std_logic_vector(11 downto 0);
+    signal store_offset   : std_logic_vector(6 downto 0);
+    signal store_ofst     : std_logic_vector(4 downto 0);
+    signal exception      : std_logic;
+    signal SEPC           : std_logic;
+    signal SCAUSE         : std_logic;
 
     begin
         -- Comportamental
         process(clock)
         begin
             if rising_edge(clock) then
-                
-                PC_if <= BID(63 downto 32);
-
-                -- Decodificação da instrução (INCOMPLETO)
                 instruction <= BID(31 downto 0);
+                PC_id <= BID(63 downto 32);
                 opcode <= instruction(6 downto 0);
-                rd     <= instruction(11 downto 7);
-                funct3 <= instruction(14 downto 12);
-                rs1    <= instruction(19 downto 15);
-                rs2    <= instruction(24 downto 20);
-                funct7 <= instruction(31 downto 25);
+
+                case opcode is
+                    when "0110011" => -- R-type
+                        rd     <= instruction(11 downto 7);
+                        funct3 <= instruction(14 downto 12);
+                        rs1    <= instruction(19 downto 15);
+                        rs2    <= instruction(24 downto 20);
+                        funct7 <= instruction(31 downto 25);
+                        exception <= '0';
+                    when "0010011" => -- I-type
+                        rd     <= instruction(11 downto 7);
+                        funct3 <= instruction(14 downto 12);
+                        rs1    <= instruction(19 downto 15);
+                        exception <= '0';
+                    when "0000011" => -- LOAD
+                        rd     <= instruction(11 downto 7);
+                        base   <= instruction(19 downto 15);
+                        offset <= instruction(31 downto 20);
+                        exception <= '0';
+                    when "0100011" => -- STORE
+                        store_ofst   <= instruction(11 downto 7);
+                        base         <= instruction(19 downto 15);
+                        rs2          <= instruction(24 downto 20);
+                        store_offset <= instruction(31 downto 25);
+                        exception <= '0';
+                    when "1100011" => -- BRANCH
+                        rs1 <= instruction(19 downto 15);
+                        rs2 <= instruction(24 downto 20);
+                        exception <= '0';
+                    when "1101111" => -- JAL
+                        rd <= instruction(11 downto 7);
+                        exception <= '0';
+                    when "1100111" => -- JALR
+                        rd  <= instruction(11 downto 7);
+                        rs1 <= instruction(19 downto 15);
+                        exception <= '0';
+                    when others => 
+                        -- Sanar duvida: as pseudo instrucoes (ex: HALT, J, Jr, NOP) possuem opcode proprio?     
+                        -- Exceção
+                        exception <= '1';
+                        id_Jump_PC <= x"00000400";
+                        id_PC_src <= '1';
+                        id_Branch_nop <-= '1';
+                end case;
+                
+                if(exception = '1') then
+                    SEPC <= '1';
+                    SCAUSE <= '1';
+                else
+                    SEPC <= '0';
+                    SCAUSE <= '0';
+                end if;       
 
                 -- Calculo do imediato
                 case opcode is
@@ -129,19 +180,19 @@ architecture behav of estagio_id is
                     case funct3 is
                         when "000" => -- BEQ
                             if (rs1_id_ex = rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
                                 id_PC_src <= '1';
                                 id_Branch_nop <-= '1';
                             end if;
                         when "001" => -- BNE
                             if (rs1_id_ex /= rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
                                 id_PC_src <= '1';
                                 id_Branch_nop <-= '1';
                             end if;
                         when "100" => -- BLT
                             if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
                                 id_PC_src <= '1';
                                 id_Branch_nop <-= '1';
                             end if;
@@ -150,7 +201,7 @@ architecture behav of estagio_id is
 
                 -- Desvios incondicionais
                 if (opcode = "1101111") then -- JAL
-                    id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                    id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
                     id_PC_src <= '1';
                     id_Branch_nop <-= '1';
                 elsif (opcode = "1100111") then -- JALR
