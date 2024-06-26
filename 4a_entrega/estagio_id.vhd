@@ -93,6 +93,8 @@ architecture behav of estagio_id is
     signal imm            : std_logic_vector(31 downto 0);
     signal gpr_rs1        : std_logic_vector(31 downto 0);
     signal gpr_rs2        : std_logic_vector(31 downto 0);
+    signal branch_Data_A  : std_logic_vector(31 downto 0);
+    signal branch_Data_B  : std_logic_vector(31 downto 0);
     signal base           : std_logic_vector(4 downto 0);
     signal offset         : std_logic_vector(11 downto 0);
     signal store_offset   : std_logic_vector(6 downto 0);
@@ -178,19 +180,19 @@ architecture behav of estagio_id is
                 end case;
 
                  -- forwarding
-                if(forwardA = "00") then
+                if(ex_fw_A_Branch = "00") then
                     branch_Data_A <= gpr_rs1;
-                elsif(forwardA = "01") then 
+                elsif(ex_fw_A_Branch = "01") then 
                     branch_Data_A <= ula_ex;
-                elsif(forwardA = "10") then
+                elsif(ex_fw_A_Branch = "10") then
                     branch_Data_A <= writedata_wb;
                 end if;
 
-                if(forwardB = "00") then
+                if(ex_fw_B_Branch = "00") then
                     branch_Data_B <= gpr_rs2;
-                elsif(forwardB = "01") then 
+                elsif(ex_fw_B_Branch = "01") then 
                     branch_Data_B <= ula_ex;
-                elsif(forwardB = "10") then
+                elsif(ex_fw_B_Branch = "10") then
                     branch_Data_B <= writedata_wb;
                 end if;
                 
