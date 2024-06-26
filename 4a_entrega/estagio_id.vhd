@@ -100,6 +100,8 @@ architecture behav of estagio_id is
     signal offset         : std_logic_vector(11 downto 0);
     signal store_offset   : std_logic_vector(6 downto 0);
     signal store_ofst     : std_logic_vector(4 downto 0);
+    signal aluop_id       : std_logic_vector(2 downto 0);
+    signal alusrc_id      : std_logic;
     signal memread_id     : std_logic;
     signal memwrite_id    : std_logic;
     signal regwrite_id    : std_logic;
@@ -129,7 +131,21 @@ architecture behav of estagio_id is
                         memread_id <= '0';
                         memwrite_id <= '0';
                         regwrite_id <= '1';
-                        exception <= '0';
+                        alusrc_id <= '0';
+                        -- Controle operação da ULA
+                        case funct3 is
+                            when "000" => -- ADD
+                                aluop_id <= "000";
+                                exception <= '0';
+                            when "010" => -- SLT
+                                aluop_id <= "010";
+                                exception <= '0';
+                            when others => -- funct3 não identificado
+                                exception <= '1';
+                                id_Jump_PC <= x"00000400";
+                                id_PC_src <= '1';
+                                id_Branch_nop <= '1';
+                        end case;
                     when "0010011" => -- I-type
                         rd     <= instruction(11 downto 7);
                         funct3 <= instruction(14 downto 12);
@@ -137,7 +153,34 @@ architecture behav of estagio_id is
                         memread_id <= '0';
                         memwrite_id <= '0';
                         regwrite_id <= '1';
-                        exception <= '0';
+                        alusrc_id <= '1';
+                        case funct3 is
+                            when "000" => -- ADDI
+                                aluop_id <= "000";
+                                exception <= '0';
+                            when "010" => -- SLTI
+                                aluop_id <= "010";
+                                exception <= '0';
+                            when "001" => -- SLLI
+                                aluop_id <= "011";
+                                exception <= '0';
+                            when "101" => -- SRLI ou SRAI
+                                if(instruction(31 downto 25) = "0000000") then -- SRLI
+                                    aluop_id <= "100";
+                                elsif(instruction(31 downto 25) = "0100000") then -- SRAI
+                                    aluop_id <= "101";
+                                else
+                                    exception <= '1';
+                                    id_Jump_PC <= x"00000400";
+                                    id_PC_src <= '1';
+                                    id_Branch_nop <= '1';
+                            end if;
+                            when others => -- funct3 não identificado
+                                exception <= '1';
+                                id_Jump_PC <= x"00000400";
+                                id_PC_src <= '1';
+                                id_Branch_nop <= '1';
+                        end case;
                     when "0000011" => -- LOAD
                         rd     <= instruction(11 downto 7);
                         base   <= instruction(19 downto 15);
@@ -145,6 +188,8 @@ architecture behav of estagio_id is
                         memread_id <= '1';
                         memwrite_id <= '0';
                         regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                         exception <= '0';
                     when "0100011" => -- STORE
                         store_ofst   <= instruction(11 downto 7);
@@ -154,6 +199,8 @@ architecture behav of estagio_id is
                         memread_id <= '0';
                         memwrite_id <= '1';
                         regwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                         exception <= '0';
                     when "1100011" => -- BRANCH
                         rs1 <= instruction(19 downto 15);
@@ -161,12 +208,16 @@ architecture behav of estagio_id is
                         memread_id <= '0';
                         memwrite_id <= '0';
                         regwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                         exception <= '0';
                     when "1101111" => -- JAL
                         rd <= instruction(11 downto 7);
                         memread_id <= '0';
                         memwrite_id <= '0';
                         regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                         exception <= '0';
                     when "1100111" => -- JALR
                         rd  <= instruction(11 downto 7);
@@ -174,6 +225,8 @@ architecture behav of estagio_id is
                         memread_id <= '0';
                         memwrite_id <= '0';
                         regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                         exception <= '0';
                     when others => 
                         -- Sanar duvida: as pseudo instrucoes (ex: HALT, J, Jr, NOP) possuem opcode proprio?     
@@ -184,6 +237,8 @@ architecture behav of estagio_id is
                         id_Branch_nop <= '1';
                         memread_id <= '0';
                         memwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
                 end case;
                 
                 if(exception = '1') then
@@ -192,7 +247,7 @@ architecture behav of estagio_id is
                 else
                     SEPC <= '0';
                     SCAUSE <= '0';
-                end if;       
+                end if;      
 
                 -- Calculo do imediato
                 case opcode is
@@ -271,13 +326,13 @@ architecture behav of estagio_id is
                 end if;               
     
             end if;
-            
+
             -- BEX(151 downto  150) <= ???
             BEX(149) <= regwrite_id;
             BEX(148) <= memwrite_id;
             BEX(147) <= memread_id; 
-            -- BEX(146) <= AluSrc_id - entrada da ula (ver c assme)
-            -- BEX(145 downto 143) <= Aluop_id (operação da ula, ver c assme)
+            BEX(146) <= alusrc_id;
+            BEX(145 downto 143) <= aluop_id;
             BEX(142 downto 138) <= rd;
             BEX(137 downto 133) <= rs2;
             BEX(132 downto 128) <= rs1;
