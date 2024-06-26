@@ -85,92 +85,265 @@ architecture behav of estagio_id is
 
     -- Sinais para decodificação da instrução
     signal instruction    : std_logic_vector(31 downto 0); 
-    signal PC_if          : std_logic_vector(31 downto 0);
+    signal PC_id          : std_logic_vector(31 downto 0);
+    signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal opcode         : std_logic_vector(6 downto 0);
     signal rs1, rs2, rd   : std_logic_vector(4 downto 0);
     signal funct3         : std_logic_vector(2 downto 0);
     signal funct7         : std_logic_vector(6 downto 0);
     signal imm            : std_logic_vector(31 downto 0);
-    signal gpr_rs1       : std_logic_vector(31 downto 0);
+    signal gpr_rs1        : std_logic_vector(31 downto 0);
+    signal gpr_rs2        : std_logic_vector(31 downto 0);
+    signal branch_Data_A  : std_logic_vector(31 downto 0);
+    signal branch_Data_B  : std_logic_vector(31 downto 0);
+    signal base           : std_logic_vector(4 downto 0);
+    signal offset         : std_logic_vector(11 downto 0);
+    signal store_offset   : std_logic_vector(6 downto 0);
+    signal store_ofst     : std_logic_vector(4 downto 0);
+    signal aluop_id       : std_logic_vector(2 downto 0);
+    signal alusrc_id      : std_logic;
+    signal memread_id     : std_logic;
+    signal memwrite_id    : std_logic;
+    signal regwrite_id    : std_logic;
+    signal exception      : std_logic;
+    signal SEPC           : std_logic;
+    signal SCAUSE         : std_logic;
 
     begin
         -- Comportamental
         process(clock)
         begin
             if rising_edge(clock) then
-                
-                PC_if <= BID(63 downto 32);
-
-                -- Decodificação da instrução (INCOMPLETO)
                 instruction <= BID(31 downto 0);
+                PC_id <= BID(63 downto 32);
                 opcode <= instruction(6 downto 0);
-                rd     <= instruction(11 downto 7);
-                funct3 <= instruction(14 downto 12);
-                rs1    <= instruction(19 downto 15);
-                rs2    <= instruction(24 downto 20);
-                funct7 <= instruction(31 downto 25);
+
+                PC_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(PC_id)) + 4, PC_plus_4'length));
+
+                -- Tem um monte de sinais aqui que nao estao sendo usados atualmente, mas tlvz em breve?
+                case opcode is
+                    when "0110011" => -- R-type
+                        rd     <= instruction(11 downto 7);
+                        funct3 <= instruction(14 downto 12);
+                        rs1    <= instruction(19 downto 15);
+                        rs2    <= instruction(24 downto 20);
+                        funct7 <= instruction(31 downto 25);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        -- Controle operação da ULA
+                        case funct3 is
+                            when "000" => -- ADD
+                                aluop_id <= "000";
+                                exception <= '0';
+                            when "010" => -- SLT
+                                aluop_id <= "010";
+                                exception <= '0';
+                            when others => -- funct3 não identificado
+                                exception <= '1';
+                                id_Jump_PC <= x"00000400";
+                                id_PC_src <= '1';
+                                id_Branch_nop <= '1';
+                        end case;
+                    when "0010011" => -- I-type
+                        rd     <= instruction(11 downto 7);
+                        funct3 <= instruction(14 downto 12);
+                        rs1    <= instruction(19 downto 15);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '1';
+                        case funct3 is
+                            when "000" => -- ADDI
+                                aluop_id <= "000";
+                                exception <= '0';
+                            when "010" => -- SLTI
+                                aluop_id <= "010";
+                                exception <= '0';
+                            when "001" => -- SLLI
+                                aluop_id <= "011";
+                                exception <= '0';
+                            when "101" => -- SRLI ou SRAI
+                                if(instruction(31 downto 25) = "0000000") then -- SRLI
+                                    aluop_id <= "100";
+                                elsif(instruction(31 downto 25) = "0100000") then -- SRAI
+                                    aluop_id <= "101";
+                                else
+                                    exception <= '1';
+                                    id_Jump_PC <= x"00000400";
+                                    id_PC_src <= '1';
+                                    id_Branch_nop <= '1';
+                            end if;
+                            when others => -- funct3 não identificado
+                                exception <= '1';
+                                id_Jump_PC <= x"00000400";
+                                id_PC_src <= '1';
+                                id_Branch_nop <= '1';
+                        end case;
+                    when "0000011" => -- LOAD
+                        rd     <= instruction(11 downto 7);
+                        base   <= instruction(19 downto 15);
+                        offset <= instruction(31 downto 20);
+                        memread_id <= '1';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                        exception <= '0';
+                    when "0100011" => -- STORE
+                        store_ofst   <= instruction(11 downto 7);
+                        base         <= instruction(19 downto 15);
+                        rs2          <= instruction(24 downto 20);
+                        store_offset <= instruction(31 downto 25);
+                        memread_id <= '0';
+                        memwrite_id <= '1';
+                        regwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                        exception <= '0';
+                    when "1100011" => -- BRANCH
+                        rs1 <= instruction(19 downto 15);
+                        rs2 <= instruction(24 downto 20);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                        exception <= '0';
+                    when "1101111" => -- JAL
+                        rd <= instruction(11 downto 7);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                        exception <= '0';
+                    when "1100111" => -- JALR
+                        rd  <= instruction(11 downto 7);
+                        rs1 <= instruction(19 downto 15);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                        exception <= '0';
+                    when others => 
+                        -- Sanar duvida: as pseudo instrucoes (ex: HALT, J, Jr, NOP) possuem opcode proprio?     
+                        -- Exceção
+                        exception <= '1';
+                        id_Jump_PC <= x"00000400";
+                        id_PC_src <= '1';
+                        id_Branch_nop <= '1';
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        alusrc_id <= '0';
+                        aluop_id <= "000";
+                end case;
+                
+                if(exception = '1') then
+                    SEPC <= '1';
+                    SCAUSE <= '1';
+                else
+                    SEPC <= '0';
+                    SCAUSE <= '0';
+                end if;      
 
                 -- Calculo do imediato
                 case opcode is
                     when "0010011" => -- I-type
-                        imm <= instruction(31 downto 20);
+                        imm <= std_logic_vector(resize(unsigned(instruction(31 downto 20)),32));
                     when "1100011" => -- BRANCH
-                        imm <= instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0';
+                        imm <= std_logic_vector(resize(unsigned(instruction(31) & instruction(7) & instruction(30 downto 25) & instruction(11 downto 8) & '0'), 32));
                     when "1101111" => -- JAL
-                        imm <= instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0';
+                        imm <= std_logic_vector(resize(unsigned(instruction(31) & instruction(19 downto 12) & instruction(20) & instruction(30 downto 21) & '0'), 32));
                     when "1100111" => -- JALR
-                        imm <= instruction(31 downto 20);
+                        imm <= std_logic_vector(resize(unsigned(instruction(31 downto 20)),32));
                     when others =>
                         imm <= (others => '0');
                 end case;
 
+                 -- forwarding
+                if(ex_fw_A_Branch = "00") then
+                    branch_Data_A <= gpr_rs1;
+                elsif(ex_fw_A_Branch = "01") then 
+                    branch_Data_A <= ula_ex;
+                elsif(ex_fw_A_Branch = "10") then
+                    branch_Data_A <= writedata_wb;
+                end if;
+
+                if(ex_fw_B_Branch = "00") then
+                    branch_Data_B <= gpr_rs2;
+                elsif(ex_fw_B_Branch = "01") then 
+                    branch_Data_B <= ula_ex;
+                elsif(ex_fw_B_Branch = "10") then
+                    branch_Data_B <= writedata_wb;
+                end if;
+                
                 -- Desvios condicionais
                 if (opcode = "1100011") then -- BRANCH
                     case funct3 is
                         when "000" => -- BEQ
-                            if (rs1_id_ex = rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                            if (branch_Data_A = branch_Data_B) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
                         when "001" => -- BNE
-                            if (rs1_id_ex /= rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                            if (branch_Data_A /= branch_Data_B) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
                         when "100" => -- BLT
-                            if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                            if (signed(branch_Data_A) < signed(branch_Data_B)) then
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
+                        when others =>
+                                id_PC_src <= '0';
+                                id_Branch_nop <= '0';
                     end case;
                 end if;
 
                 -- Desvios incondicionais
                 if (opcode = "1101111") then -- JAL
-                    id_Jump_PC <= std_logic_vector(unsigned(PC_if) + signed(imm));
+                    id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                     id_PC_src <= '1';
-                    id_Branch_nop <-= '1';
+                    id_Branch_nop <= '1';
                 elsif (opcode = "1100111") then -- JALR
-                    id_Jump_PC <= std_logic_vector(gpr_rs1 + signed(imm));
+                    id_Jump_PC <= std_logic_vector(unsigned(gpr_rs1) + unsigned(signed(imm)));
                     id_PC_src <= '1';
-                    id_Branch_nop <-= '1';
+                    id_Branch_nop <= '1';
                 end if;
-
+                
+                -- hazard
                 if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                     id_hd_hazard <= '1';
                 else
                     id_hd_hazard <= '0';
-                end if;
+                end if;               
     
             end if;
+
+            -- BEX(151 downto  150) <= ???
+            BEX(149) <= regwrite_id;
+            BEX(148) <= memwrite_id;
+            BEX(147) <= memread_id; 
+            BEX(146) <= alusrc_id;
+            BEX(145 downto 143) <= aluop_id;
+            BEX(142 downto 138) <= rd;
+            BEX(137 downto 133) <= rs2;
+            BEX(132 downto 128) <= rs1;
+            BEX(127 downto 96) <= PC_plus_4;
+            BEX(95 downto 64) <= imm;
+            BEX(63 downto 32) <= gpr_rs2;
+            BEX(31 downto 0) <= gpr_rs1;
+
         end process;
 
-        -- Estrutural
-        -- Sanar duvida: ha alguma escrida no regfile em ID?
-        -- R: a escrita é controlada pelo estagio wb 
+        -- Estrutural: a escrita é controlada pelo estagio wb 
         regfile_inst: regfile
             port map(
                 clock       => clock,
@@ -180,7 +353,7 @@ architecture behav of estagio_id is
                 write_reg_rd=> rd,
                 data_in     => writedata_wb,
                 data_out_a  => gpr_rs1,
-                data_out_b  => (others => '0')
+                data_out_b  => gpr_rs2
             );
 
 end architecture;
