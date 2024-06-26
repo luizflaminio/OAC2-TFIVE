@@ -109,6 +109,7 @@ architecture behav of estagio_id is
                 PC_id <= BID(63 downto 32);
                 opcode <= instruction(6 downto 0);
 
+                -- Tem um monte de sinais aqui que nao estao sendo usados atualmente, mas tlvz em breve?
                 case opcode is
                     when "0110011" => -- R-type
                         rd     <= instruction(11 downto 7);
@@ -209,7 +210,8 @@ architecture behav of estagio_id is
                     id_PC_src <= '1';
                     id_Branch_nop <-= '1';
                 end if;
-
+                
+                -- hazard
                 if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                     id_hd_hazard <= '1';
                 else
