@@ -110,6 +110,9 @@ architecture behav of estagio_id is
     signal SCAUSE         : std_logic;
 
     begin
+
+        COP_ex <= COP_id;
+        COP_id <= decode(BID(31 downto 0));
         -- Comportamental
         process(clock)
         begin
@@ -227,6 +230,16 @@ architecture behav of estagio_id is
                         regwrite_id <= '1';
                         alusrc_id <= '0';
                         aluop_id <= "000";
+                        exception <= '0';
+                    when "0000000" => -- NOP, mesmo comportamento do tipo I com SLLI
+                        rd     <= instruction(11 downto 7);
+                        funct3 <= instruction(14 downto 12);
+                        rs1    <= instruction(19 downto 15);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
+                        alusrc_id <= '1';
+                        aluop_id <= "011";
                         exception <= '0';
                     when others => 
                         -- Sanar duvida: as pseudo instrucoes (ex: HALT, J, Jr, NOP) possuem opcode proprio?     
