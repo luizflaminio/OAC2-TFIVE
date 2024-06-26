@@ -197,6 +197,9 @@ architecture behav of estagio_id is
                                 id_PC_src <= '1';
                                 id_Branch_nop <= '1';
                             end if;
+                        when others =>
+                                id_PC_src <= '0';
+                                id_Branch_nop <= '0';
                     end case;
                 end if;
 
