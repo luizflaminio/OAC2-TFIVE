@@ -86,6 +86,7 @@ architecture behav of estagio_id is
     -- Sinais para decodificação da instrução
     signal instruction    : std_logic_vector(31 downto 0); 
     signal PC_id          : std_logic_vector(31 downto 0);
+    signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal opcode         : std_logic_vector(6 downto 0);
     signal rs1, rs2, rd   : std_logic_vector(4 downto 0);
     signal funct3         : std_logic_vector(2 downto 0);
@@ -99,6 +100,9 @@ architecture behav of estagio_id is
     signal offset         : std_logic_vector(11 downto 0);
     signal store_offset   : std_logic_vector(6 downto 0);
     signal store_ofst     : std_logic_vector(4 downto 0);
+    signal memread_id     : std_logic;
+    signal memwrite_id    : std_logic;
+    signal regwrite_id    : std_logic;
     signal exception      : std_logic;
     signal SEPC           : std_logic;
     signal SCAUSE         : std_logic;
@@ -112,6 +116,8 @@ architecture behav of estagio_id is
                 PC_id <= BID(63 downto 32);
                 opcode <= instruction(6 downto 0);
 
+                PC_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(PC_id)) + 4, PC_plus_4'length));
+
                 -- Tem um monte de sinais aqui que nao estao sendo usados atualmente, mas tlvz em breve?
                 case opcode is
                     when "0110011" => -- R-type
@@ -120,33 +126,54 @@ architecture behav of estagio_id is
                         rs1    <= instruction(19 downto 15);
                         rs2    <= instruction(24 downto 20);
                         funct7 <= instruction(31 downto 25);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
                         exception <= '0';
                     when "0010011" => -- I-type
                         rd     <= instruction(11 downto 7);
                         funct3 <= instruction(14 downto 12);
                         rs1    <= instruction(19 downto 15);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
                         exception <= '0';
                     when "0000011" => -- LOAD
                         rd     <= instruction(11 downto 7);
                         base   <= instruction(19 downto 15);
                         offset <= instruction(31 downto 20);
+                        memread_id <= '1';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
                         exception <= '0';
                     when "0100011" => -- STORE
                         store_ofst   <= instruction(11 downto 7);
                         base         <= instruction(19 downto 15);
                         rs2          <= instruction(24 downto 20);
                         store_offset <= instruction(31 downto 25);
+                        memread_id <= '0';
+                        memwrite_id <= '1';
+                        regwrite_id <= '0';
                         exception <= '0';
                     when "1100011" => -- BRANCH
                         rs1 <= instruction(19 downto 15);
                         rs2 <= instruction(24 downto 20);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '0';
                         exception <= '0';
                     when "1101111" => -- JAL
                         rd <= instruction(11 downto 7);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
                         exception <= '0';
                     when "1100111" => -- JALR
                         rd  <= instruction(11 downto 7);
                         rs1 <= instruction(19 downto 15);
+                        memread_id <= '0';
+                        memwrite_id <= '0';
+                        regwrite_id <= '1';
                         exception <= '0';
                     when others => 
                         -- Sanar duvida: as pseudo instrucoes (ex: HALT, J, Jr, NOP) possuem opcode proprio?     
@@ -155,6 +182,8 @@ architecture behav of estagio_id is
                         id_Jump_PC <= x"00000400";
                         id_PC_src <= '1';
                         id_Branch_nop <= '1';
+                        memread_id <= '0';
+                        memwrite_id <= '0';
                 end case;
                 
                 if(exception = '1') then
@@ -242,11 +271,24 @@ architecture behav of estagio_id is
                 end if;               
     
             end if;
+            
+            -- BEX(151 downto  150) <= ???
+            BEX(149) <= regwrite_id;
+            BEX(148) <= memwrite_id;
+            BEX(147) <= memread_id; 
+            -- BEX(146) <= AluSrc_id - entrada da ula (ver c assme)
+            -- BEX(145 downto 143) <= Aluop_id (operação da ula, ver c assme)
+            BEX(142 downto 138) <= rd;
+            BEX(137 downto 133) <= rs2;
+            BEX(132 downto 128) <= rs1;
+            BEX(127 downto 96) <= PC_plus_4;
+            BEX(95 downto 64) <= imm;
+            BEX(63 downto 32) <= gpr_rs2;
+            BEX(31 downto 0) <= gpr_rs1;
+
         end process;
 
-        -- Estrutural
-        -- Sanar duvida: ha alguma escrida no regfile em ID?
-        -- R: a escrita é controlada pelo estagio wb 
+        -- Estrutural: a escrita é controlada pelo estagio wb 
         regfile_inst: regfile
             port map(
                 clock       => clock,
