@@ -151,7 +151,7 @@ architecture behav of estagio_id is
                         exception <= '1';
                         id_Jump_PC <= x"00000400";
                         id_PC_src <= '1';
-                        id_Branch_nop <-= '1';
+                        id_Branch_nop <= '1';
                 end case;
                 
                 if(exception = '1') then
@@ -181,34 +181,34 @@ architecture behav of estagio_id is
                     case funct3 is
                         when "000" => -- BEQ
                             if (rs1_id_ex = rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
                         when "001" => -- BNE
                             if (rs1_id_ex /= rs2_id_ex) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
                         when "100" => -- BLT
                             if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
-                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
+                                id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
-                                id_Branch_nop <-= '1';
+                                id_Branch_nop <= '1';
                             end if;
                     end case;
                 end if;
 
                 -- Desvios incondicionais
                 if (opcode = "1101111") then -- JAL
-                    id_Jump_PC <= std_logic_vector(unsigned(PC_id) + signed(imm));
+                    id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                     id_PC_src <= '1';
-                    id_Branch_nop <-= '1';
+                    id_Branch_nop <= '1';
                 elsif (opcode = "1100111") then -- JALR
-                    id_Jump_PC <= std_logic_vector(gpr_rs1 + signed(imm));
+                    id_Jump_PC <= std_logic_vector(unsigned(gpr_rs1) + unsigned(signed(imm)));
                     id_PC_src <= '1';
-                    id_Branch_nop <-= '1';
+                    id_Branch_nop <= '1';
                 end if;
                 
                 -- hazard
@@ -233,7 +233,7 @@ architecture behav of estagio_id is
                 write_reg_rd=> rd,
                 data_in     => writedata_wb,
                 data_out_a  => gpr_rs1,
-                data_out_b  => (others => '0')
+                data_out_b  => open
             );
 
 end architecture;
