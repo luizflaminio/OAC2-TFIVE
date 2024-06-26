@@ -92,6 +92,7 @@ architecture behav of estagio_id is
     signal funct7         : std_logic_vector(6 downto 0);
     signal imm            : std_logic_vector(31 downto 0);
     signal gpr_rs1        : std_logic_vector(31 downto 0);
+    signal gpr_rs2        : std_logic_vector(31 downto 0);
     signal base           : std_logic_vector(4 downto 0);
     signal offset         : std_logic_vector(11 downto 0);
     signal store_offset   : std_logic_vector(6 downto 0);
@@ -176,23 +177,40 @@ architecture behav of estagio_id is
                         imm <= (others => '0');
                 end case;
 
+                 -- forwarding
+                if(forwardA = "00") then
+                    branch_Data_A <= gpr_rs1;
+                elsif(forwardA = "01") then 
+                    branch_Data_A <= ula_ex;
+                elsif(forwardA = "10") then
+                    branch_Data_A <= writedata_wb;
+                end if;
+
+                if(forwardB = "00") then
+                    branch_Data_B <= gpr_rs2;
+                elsif(forwardB = "01") then 
+                    branch_Data_B <= ula_ex;
+                elsif(forwardB = "10") then
+                    branch_Data_B <= writedata_wb;
+                end if;
+                
                 -- Desvios condicionais
                 if (opcode = "1100011") then -- BRANCH
                     case funct3 is
                         when "000" => -- BEQ
-                            if (rs1_id_ex = rs2_id_ex) then
+                            if (branch_Data_A = branch_Data_B) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
                                 id_Branch_nop <= '1';
                             end if;
                         when "001" => -- BNE
-                            if (rs1_id_ex /= rs2_id_ex) then
+                            if (branch_Data_A /= branch_Data_B) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
                                 id_Branch_nop <= '1';
                             end if;
                         when "100" => -- BLT
-                            if (signed(rs1_id_ex) < signed(rs2_id_ex)) then
+                            if (signed(branch_Data_A) < signed(branch_Data_B)) then
                                 id_Jump_PC <= std_logic_vector(unsigned(PC_id) + unsigned(signed(imm)));
                                 id_PC_src <= '1';
                                 id_Branch_nop <= '1';
@@ -219,7 +237,7 @@ architecture behav of estagio_id is
                     id_hd_hazard <= '1';
                 else
                     id_hd_hazard <= '0';
-                end if;
+                end if;               
     
             end if;
         end process;
@@ -236,7 +254,7 @@ architecture behav of estagio_id is
                 write_reg_rd=> rd,
                 data_in     => writedata_wb,
                 data_out_a  => gpr_rs1,
-                data_out_b  => open
+                data_out_b  => gpr_rs2
             );
 
 end architecture;
