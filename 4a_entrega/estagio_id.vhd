@@ -364,6 +364,9 @@ architecture behav of estagio_id is
             BEX(63 downto 32) <= gpr_rs2;
             BEX(31 downto 0) <= gpr_rs1;
 
+            rs1_id_ex <= rs1;
+            rs2_id_ex <= rs2;
+
         end process;
 
         -- Estrutural: a escrita é controlada pelo estagio wb 
