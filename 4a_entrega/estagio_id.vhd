@@ -8,6 +8,7 @@ use ieee.std_logic_signed.all;
 
 library work;
 use work.tipos.all;
+use work.opcode_converter.all;
 
 -- O estágio de decodificação e leitura de registradores (id) deve realizar a decodificação 
 -- da instrução lida no estágio de
