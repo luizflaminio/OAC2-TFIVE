@@ -244,7 +244,10 @@ begin
         assert BID(63 downto 32) = x"00000048" severity error; 	 -- Testa se manteve o PC = x"00000044"
 		report " PC_if = " & to_hex_string(BID(63 downto 32));	 -- Imprime o valor que esta no PC
 		report " " ;											 -- Pula uma linha no console de saida	
+		
+		wait for clock_period;
 
     keep_simulating <= false;		-- Mantenha simulacao ativa 
+		wait;
     end process;
 end tb;   
