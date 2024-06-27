@@ -5,6 +5,8 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+use std.env.stop;
+
 library work;
 use work.tipos.all;
 use work.opcode_converter.all;
@@ -66,7 +68,6 @@ architecture behav of estagio_if is
         );
     end component;
     
-    signal s_reset: std_logic;
     signal s_halt: std_logic := '0';
     signal s_instruction : std_logic_vector(31 downto 0);
     signal ri_if : std_logic_vector(31 downto 0);
@@ -76,12 +77,8 @@ architecture behav of estagio_if is
     signal COP_IF : instruction_type := NOP;
 
 begin
-    s_reset <= '0' when keep_simulating else '1';
-    -- Como foi inserido o endereço de interrupção/exceção?
-    -- O endereço de interrupção é uma das entradas do mux que determina qual o PC a ser usado, é selecionado a partir do sinal id_Branch_nop
-    -- Já o endereço de exceção foi implementado como sujerido no enunciado, o endereço 0x00000400 e é selecionado pelo sinal id_PC_src
-
-    s_pc_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(s_PC)) + 4, s_pc_plus_4'length));
+    s_pc_plus_4 <= std_logic_vector(unsigned(s_PC) + 4);
+    COP_IF <= decode(ri_if);
 
     pc_source_process: process(id_PC_src, s_pc_plus_4, id_Jump_PC)
         begin
@@ -91,9 +88,6 @@ begin
                 s_pc_mux <= s_pc_plus_4;
             end if;
     end process;
-
-    -- Como se implementou a preservação do valor do PC?
-    -- O valor de PC só atualiza se id_hd_hazard = '1'
 
     pc_process: process(clock)
     begin
@@ -106,9 +100,6 @@ begin
         end if;
     end process;
 
-    -- Como se implementou a inserção de NOPs?
-    -- Se o sinal de hazard estiver ativo, passa-se adiante a inserção de bolhas
-
     branch_process: process(s_instruction, id_Branch_nop)
         begin
             if(id_Branch_nop = '1') then
@@ -117,8 +108,6 @@ begin
                 ri_if <= s_instruction;
             end if;
     end process;
-    
-    COP_IF <= decode(ri_if);
 
     bid_process: process(clock)
     begin
@@ -131,6 +120,12 @@ begin
     begin
         wait until (ri_if = x"0000006F" and falling_edge(clock));
         s_halt <= '1';
+    end process;
+
+    stop_simulation: process
+    begin 
+        wait until keep_simulating = false;
+        stop;
     end process;
 
     imem: ram
