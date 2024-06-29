@@ -344,7 +344,7 @@ architecture behav of estagio_id is
                 id_Jump_PC <= x"00000400";
             elsif opcode = "1100111" then -- JALR
                 id_Jump_PC <= std_logic_vector(signed(gpr_rs1) + signed(imm_ext));
-            elsif opcode = "1100011" or opcode = "1101111" then
+            elsif opcode = "1100011" or opcode = "1101111" then -- BRANCH e JAL
                 id_Jump_PC <= std_logic_vector(signed(PC_id) + signed(imm_ext));
             else 
                 id_Jump_PC <= x"00000000";
