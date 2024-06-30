@@ -111,15 +111,20 @@ architecture behav of estagio_id is
     signal exception      : std_logic := '0';
     signal SEPC           : std_logic_vector(31 downto 0) := x"00000000";
     signal SCAUSE         : std_logic_vector(1 downto 0) := "00";
+    signal s_COP_id	      : instruction_type  := NOP;
 
     begin
 
-        COP_id <= decode(BID(31 downto 0));
+        set_COP_id: process(s_COP_id)
+        begin
+            COP_id <= s_COP_id;
+        end process;
 
         set_opcode: process(BID)
         begin
             opcode <= BID(6 downto 0);
             PC_id <= BID(63 downto 32);
+            s_COP_id <= decode(BID(31 downto 0));
         end process;
 
         decode: process(opcode)
@@ -374,6 +379,7 @@ architecture behav of estagio_id is
         process(clock)
         begin
             if rising_edge(clock) then
+                COP_ex <= s_COP_id;
                  -- forwarding
                 if(ex_fw_A_Branch = "00") then
                     branch_Data_A <= gpr_rs1;
