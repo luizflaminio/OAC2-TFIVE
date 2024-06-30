@@ -85,7 +85,6 @@ architecture behav of estagio_id is
     end component;
 
     -- Sinais para decodificação da instrução
-    signal instruction    : std_logic_vector(31 downto 0); 
     signal PC_id          : std_logic_vector(31 downto 0);
     signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal opcode         : std_logic_vector(6 downto 0);
@@ -110,8 +109,8 @@ architecture behav of estagio_id is
     signal regwrite_id    : std_logic;
     signal memtoreg_id    : std_logic_vector(1 downto 0);
     signal exception      : std_logic := '0';
-    signal SEPC           : std_logic;
-    signal SCAUSE         : std_logic;
+    signal SEPC           : std_logic_vector(31 downto 0) := x"00000000";
+    signal SCAUSE         : std_logic_vector(1 downto 0) := "00";
 
     begin
 
@@ -120,6 +119,7 @@ architecture behav of estagio_id is
         set_opcode: process(BID)
         begin
             opcode <= BID(6 downto 0);
+            PC_id <= BID(63 downto 32);
         end process;
 
         decode: process(opcode)
@@ -338,7 +338,7 @@ architecture behav of estagio_id is
             end case;
         end process;
 
-        calc_branch_addrs: process(imm_ext)
+        calc_branch_addrs: process(imm_ext, exception, opcode)
         begin
             if exception = '1' then
                 id_Jump_PC <= x"00000400";
@@ -350,24 +350,30 @@ architecture behav of estagio_id is
                 id_Jump_PC <= x"00000000";
             end if;
         end process;
+
+        PC_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(PC_id)) + 4, PC_plus_4'length));
+
+        sepc_process: process(clock)
+        begin
+            if(rising_edge(clock)) then
+                if(exception = '1') then
+                    SEPC <= BID(63 downto 32);
+                end if;
+            end if;
+        end process;
+
+        scause_process: process(clock)
+        begin
+            if(rising_edge(clock)) then
+                if(exception = '1') then
+                    SCAUSE <= "10";
+                end if;
+            end if;
+        end process;
         -- Comportamental
         process(clock)
         begin
             if rising_edge(clock) then
-                -- instruction <= BID(31 downto 0);
-                PC_id <= BID(63 downto 32);
-                -- opcode <= BID(6 downto 0);
-
-                PC_plus_4 <= std_logic_vector(to_unsigned(to_integer(unsigned(PC_id)) + 4, PC_plus_4'length));
-                
-                if(exception = '1') then
-                    SEPC <= '1';
-                    SCAUSE <= '1';
-                else
-                    SEPC <= '0';
-                    SCAUSE <= '0';
-                end if;     
-
                  -- forwarding
                 if(ex_fw_A_Branch = "00") then
                     branch_Data_A <= gpr_rs1;
