@@ -423,7 +423,7 @@ architecture behav of estagio_id is
                 id_hd_hazard <= '1';
             elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
                 id_hd_hazard <= '1';
-            else
+            elsif MemRead_ex = '0' then
                 id_hd_hazard <= '0';
             end if;  
         end process;
