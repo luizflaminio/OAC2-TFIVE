@@ -128,14 +128,14 @@ architecture behav of estagio_id is
         decode: process(opcode, funct3, funct7, BID)
         begin
             if opcode = "0110011" then -- R-type
-                rd     <= BID(11 downto 7);
-                rs1    <= BID(19 downto 15);
-                rs2    <= BID(24 downto 20);
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1';
                 memwrite_id <= '0';
                 memread_id <= '0';
                 alusrc_id <= '0';
+                rd     <= BID(11 downto 7);
+                rs2    <= BID(24 downto 20);
+                rs1    <= BID(19 downto 15);
                 case funct3 is 
                     when "000" => -- ADD
                         aluop_id <= "000";
@@ -153,15 +153,16 @@ architecture behav of estagio_id is
                         exception <= '1';
                 end case;
             elsif opcode = "0010011" then -- I-type
-                rs1    <= BID(19 downto 15);
-                rd     <= BID(11 downto 7);
-                imm <= "00000000" & BID(31 downto 20);
-                imm_type <= "01";
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1';
                 memwrite_id <= '0';
                 memread_id <= '0';
                 alusrc_id <= '1';
+                rd  <= BID(11 downto 7);
+                rs2 <= "00000";
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31 downto 20);
+                imm_type <= "01";
                 case funct3 is 
                     when "000" => -- ADDI
                         aluop_id <= "000";
@@ -200,43 +201,47 @@ architecture behav of estagio_id is
                         exception <= '1';
                 end case;
             elsif opcode = "0000011" then -- LW
-                rd  <= BID(11 downto 7);
-                rs1 <= BID(19 downto 15);
-                imm <= "00000000" & BID(31 downto 20);
-                imm_type <= "01";
                 memtoreg_id <= "10"; -- saida memória
                 regwrite_id <= '1';
                 memwrite_id <= '0';
                 memread_id <= '1';
                 alusrc_id <= '1';
                 aluop_id <= "000";
+                rd  <= BID(11 downto 7);
+                rs2 <= "00000";
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31 downto 20);
+                imm_type <= "01";
                 id_PC_src <= '0';
                 id_Branch_nop <= '0';
                 exception <= '0';
             elsif opcode = "0100011" then  -- SW
-                rs1 <= BID(19 downto 15);
-                rd  <= BID(24 downto 20);
-                imm <= "00000000" & BID(31 downto 25) & BID(11 downto 7);
-                imm_type <= "01";
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '0'; 
                 memwrite_id <= '1';
                 memread_id <= '0';
                 alusrc_id <= '1';
                 aluop_id <= "000";
+                rd  <= BID(24 downto 20);
+                rs2 <= "00000";
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31 downto 25) & BID(11 downto 7);
+                imm_type <= "01";
                 id_PC_src <= '0';
                 id_Branch_nop <= '0';
                 exception <= '0';
             elsif opcode = "1100011" then -- BRANCH
-                rs1 <= BID(19 downto 15);
-                rs2 <= BID(24 downto 20);
-                imm <= "00000000" & BID(31) & BID(7) & BID(30 downto 25) & BID(11 downto 8);
-                imm_type <= "00";
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '0'; 
                 memwrite_id <= '1';
                 memread_id <= '0';
                 alusrc_id <= '1';
+                aluop_id <= "000";
+                rd <= "00000";
+                rs2 <= BID(24 downto 20);
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31) & BID(7) & BID(30 downto 25) & BID(11 downto 8);
+                imm_type <= "00";
                 case funct3 is
                     when "000" => -- BEQ
                         if (branch_Data_A = branch_Data_B) then
@@ -262,41 +267,45 @@ architecture behav of estagio_id is
                         exception <= '1';
                 end case;
             elsif opcode = "1101111" then -- JAL
-                rd <= BID(11 downto 7);
-                imm <= BID(31) & BID(19 downto 12) & BID(22) & BID(30 downto 21);
-                imm_type <= "10";
                 memtoreg_id <= "00"; -- saida ULA
                 regwrite_id <= '1'; 
                 memwrite_id <= '0';
                 memread_id <= '0';
                 alusrc_id <= '0';
                 aluop_id <= "000";
+                rd <= BID(11 downto 7);
+                rs2 <= "00000";
+                rs1 <= "00000";
+                imm <= BID(31) & BID(19 downto 12) & BID(22) & BID(30 downto 21);
+                imm_type <= "10";
                 id_PC_src <= '1';
                 id_Branch_nop <= '1';
                 exception <= '0';
             elsif opcode = "1100111" then -- JALR
-                rd <= BID(11 downto 7);
-                rs1 <= BID(19 downto 15);
-                imm <= "00000000" & BID(31 downto 20);
-                imm_type <= "00";
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1'; 
                 memwrite_id <= '0';
                 memread_id <= '0';
                 alusrc_id <= '0';
                 aluop_id <= "000";
+                rd <= BID(11 downto 7);
+                rs2 <= "00000";
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31 downto 20);
+                imm_type <= "00";
                 id_PC_src <= '1';
                 id_Branch_nop <= '1';
                 exception <= '0';
             elsif opcode = "0000000" then -- NOP
-                rs1    <= BID(19 downto 15);
-                rd     <= BID(11 downto 7);
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1';
                 memwrite_id <= '0';
                 memread_id <= '0';
                 alusrc_id <= '1';
                 aluop_id <= "011";
+                rd  <= BID(11 downto 7);
+                rs2 <= "00000";
+                rs1 <= BID(19 downto 15);
                 id_PC_src <= '0';
                 id_Branch_nop <= '0';
                 exception <= '0';
@@ -368,34 +377,49 @@ architecture behav of estagio_id is
                 end if;
             end if;
         end process;
+
+        forwarding_process: process(ex_fw_A_Branch, ex_fw_B_Branch)
+        begin
+            if(ex_fw_A_Branch = "00") then
+                branch_Data_A <= gpr_rs1;
+            elsif(ex_fw_A_Branch = "01") then 
+                branch_Data_A <= ula_ex;
+            elsif(ex_fw_A_Branch = "10") then
+                branch_Data_A <= writedata_wb;
+            else 
+                branch_Data_A <= x"00000000";
+            end if;
+
+            if(ex_fw_B_Branch = "00") then
+                branch_Data_B <= gpr_rs2;
+            elsif(ex_fw_B_Branch = "01") then 
+                branch_Data_B <= ula_ex;
+            elsif(ex_fw_B_Branch = "10") then
+                branch_Data_B <= writedata_wb;
+            else 
+                branch_Data_B <= x"00000000";
+            end if;
+        end process;
+
+        hazard_process: process(MemRead_ex, rs2, rs1, rd_ex)
+        begin
+            if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
+                id_hd_hazard <= '1';
+            else
+                id_hd_hazard <= '0';
+            end if;  
+        end process;
+
+        set_rs_id_ex: process(rs1, rs2, clock)
+        begin 
+            rs1_id_ex <= rs1;
+            rs2_id_ex <= rs2;
+        end process;
         -- Comportamental
         process(clock)
         begin
             if rising_edge(clock) then
                 COP_ex <= s_COP_id;
-                 -- forwarding
-                if(ex_fw_A_Branch = "00") then
-                    branch_Data_A <= gpr_rs1;
-                elsif(ex_fw_A_Branch = "01") then 
-                    branch_Data_A <= ula_ex;
-                elsif(ex_fw_A_Branch = "10") then
-                    branch_Data_A <= writedata_wb;
-                end if;
-
-                if(ex_fw_B_Branch = "00") then
-                    branch_Data_B <= gpr_rs2;
-                elsif(ex_fw_B_Branch = "01") then 
-                    branch_Data_B <= ula_ex;
-                elsif(ex_fw_B_Branch = "10") then
-                    branch_Data_B <= writedata_wb;
-                end if;
-                
-                -- hazard
-                if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
-                    id_hd_hazard <= '1';
-                else
-                    id_hd_hazard <= '0';
-                end if;               
                     
                 BEX(151 downto  150) <= memtoreg_id;
                 BEX(149) <= regwrite_id;
@@ -411,10 +435,6 @@ architecture behav of estagio_id is
                 BEX(63 downto 32) <= gpr_rs2;
                 BEX(31 downto 0) <= gpr_rs1;
             end if;
-
-            rs1_id_ex <= rs1;
-            rs2_id_ex <= rs2;
-
         end process;
 
         -- Estrutural: a escrita é controlada pelo estagio wb 
