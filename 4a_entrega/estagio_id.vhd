@@ -125,16 +125,16 @@ architecture behav of estagio_id is
             opcode <= BID(6 downto 0);
             PC_id <= BID(63 downto 32);
             s_COP_id <= decode(BID(31 downto 0));
+            funct3 <= BID(14 downto 12);
+            funct7 <= BID(31 downto 25);
         end process;
 
-        decode: process(opcode)
+        decode: process(opcode, funct3, funct7)
         begin
             if opcode = "0110011" then -- R-type
                 rd     <= BID(11 downto 7);
-                funct3 <= BID(14 downto 12);
                 rs1    <= BID(19 downto 15);
                 rs2    <= BID(24 downto 20);
-                funct7 <= BID(31 downto 25);
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1';
                 memwrite_id <= '0';
@@ -159,8 +159,6 @@ architecture behav of estagio_id is
             elsif opcode = "0010011" then -- I-type
                 rs1    <= BID(19 downto 15);
                 rd     <= BID(11 downto 7);
-                funct3 <= BID(14 downto 12);
-                funct7 <= BID(31 downto 25);
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "01";
                 memtoreg_id <= "01"; -- saida ULA
@@ -296,8 +294,6 @@ architecture behav of estagio_id is
             elsif opcode = "0000000" then -- NOP
                 rs1    <= BID(19 downto 15);
                 rd     <= BID(11 downto 7);
-                funct3 <= BID(14 downto 12);
-                funct7 <= BID(31 downto 25);
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '1';
                 memwrite_id <= '0';
