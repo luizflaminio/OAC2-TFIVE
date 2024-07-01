@@ -222,8 +222,8 @@ architecture behav of estagio_id is
                 memread_id <= '0';
                 alusrc_id <= '1';
                 aluop_id <= "000";
-                rd  <= BID(24 downto 20);
-                rs2 <= "00000";
+                rd  <= "00000";
+                rs2 <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
                 imm <= "00000000" & BID(31 downto 25) & BID(11 downto 7);
                 imm_type <= "01";
@@ -267,7 +267,7 @@ architecture behav of estagio_id is
                         exception <= '1';
                 end case;
             elsif opcode = "1101111" then -- JAL
-                memtoreg_id <= "00"; -- saida ULA
+                memtoreg_id <= "10"; -- saida ULA
                 regwrite_id <= '1'; 
                 memwrite_id <= '0';
                 memread_id <= '0';
@@ -412,8 +412,10 @@ architecture behav of estagio_id is
 
         set_rs_id_ex: process(rs1, rs2, clock)
         begin 
-            rs1_id_ex <= rs1;
-            rs2_id_ex <= rs2;
+            if rising_edge(clock) then
+                rs1_id_ex <= rs1;
+                rs2_id_ex <= rs2;
+            end if;
         end process;
         -- Comportamental
         process(clock)
@@ -434,7 +436,7 @@ architecture behav of estagio_id is
                 BEX(95 downto 64) <= imm_ext;
                 BEX(63 downto 32) <= gpr_rs2;
                 BEX(31 downto 0) <= gpr_rs1;
-            end if;
+            end if; 
         end process;
 
         -- Estrutural: a escrita é controlada pelo estagio wb 
