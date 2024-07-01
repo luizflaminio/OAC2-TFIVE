@@ -429,12 +429,13 @@ architecture behav of estagio_id is
         end process;
 
         set_rs_id_ex: process(rs1, rs2, clock)
-        begin 
-            if rising_edge(clock) then
+        begin
+            if falling_edge(clock) then
                 rs1_id_ex <= rs1;
                 rs2_id_ex <= rs2;
             end if;
         end process;
+
         -- Comportamental
         process(clock)
         begin
