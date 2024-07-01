@@ -405,6 +405,8 @@ architecture behav of estagio_id is
         begin
             if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                 id_hd_hazard <= '1';
+            elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
+                id_hd_hazard <= '1';
             else
                 id_hd_hazard <= '0';
             end if;  
