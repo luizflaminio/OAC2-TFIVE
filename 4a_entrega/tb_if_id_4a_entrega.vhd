@@ -190,8 +190,8 @@ begin
 							rd_ex			<= "00000";
 							--RegWrite_ex 	<= '0';
 							ULA_ex 			<= x"00000000";
-							rs1_id_ex		<= "00000";
-							rs2_id_ex		<= "01000";
+							-- rs1_id_ex		<= "00000";
+							-- rs2_id_ex		<= "01000";
 							MemRead_mem 	<= '0';
 							rd_mem			<= "00000";
 							ula_mem 		<= x"00000000";
@@ -297,7 +297,7 @@ begin
 				when 1 => 	--Teste da segunda instru��o do programa swap: addi,a1,zero,3 ==> 20 ns
 							MemRead_ex 		<= '0';
 							rd_ex			<= "00000";	
-							rs2_id_ex		<= "00000";
+							-- rs2_id_ex		<= "00000";
 							NPC_mem			<= x"00000004";
 							report "=================================================================================  " severity warning;
 							report "Count = " & to_string(count) severity warning;
@@ -460,7 +460,7 @@ begin
 				when 3 => 	--Teste da quarta instru��o do programa	swap: add,t0,a0,0(t0)	==> 40 ns
 							MemRead_ex 		<= '0';
 							rd_ex			<= "01011";
-							rs2_id_ex		<= "00011";	
+							-- rs2_id_ex		<= "00011";	
 							rd_mem			<= "00000";	
 							NPC_mem			<= x"00000008";
 							report "=================================================================================  " severity warning;
@@ -543,8 +543,8 @@ begin
 							MemRead_ex 		<= '0';
 							rd_ex			<= "01011";
 							ula_ex			<= x"00000003";
-							rs1_id_ex		<= "01011";	
-							rs2_id_ex		<= "00010";  
+							-- rs1_id_ex		<= "01011";	
+							-- rs2_id_ex		<= "00010";  
 							rd_mem			<= "01010";	  
 							NPC_mem			<= x"0000000C";
 							report "=================================================================================  " severity warning;
@@ -627,8 +627,8 @@ begin
 							MemRead_ex 		<= '1';
 							rd_ex			<= "00101";
 							ULA_ex			<= x"0000000C";
-							rs1_id_ex		<= "01010";	
-							rs2_id_ex		<= "00101";	
+							-- rs1_id_ex		<= "01010";	
+							-- rs2_id_ex		<= "00101";	
 							rd_mem			<= "01011";
 							ula_mem 		<= x"00000003";
 							report "=================================================================================  " severity warning;
@@ -710,8 +710,8 @@ begin
 				when 6 => 	--Teste da s�tima instru��o do programa swap: sw t2, 0(t0)	 ==> 70 ns
 							MemRead_ex 		<= '1';
 							rd_ex			<= "00110";
-							rs1_id_ex		<= "00101";	
-							rs2_id_ex		<= "00000";
+							-- rs1_id_ex		<= "00101";	
+							-- rs2_id_ex		<= "00000";
 							rd_mem			<= "00101";
 							ula_mem 		<= x"0000000C";
 							report "=================================================================================  " severity warning;
@@ -793,7 +793,7 @@ begin
 				when 7 => 	--Teste da oitava instru��o do programa swap: sw t1, 4(t0)	   ==> 80 ns
 							MemRead_ex 		<= '1';
 							rd_ex			<= "00110";	
-							rs2_id_ex		<= "00100";
+							-- rs2_id_ex		<= "00100";
 							report "=================================================================================  " severity warning;
 							report "Count = " & to_string(count) severity warning;
 							report "=================================================================================  " severity warning;
@@ -874,7 +874,7 @@ begin
 							MemRead_ex 		<= '1';
 							rd_ex			<= "00111";
 							ULA_ex			<= x"00000010";
-							rs2_id_ex		<= "00111";
+							-- rs2_id_ex		<= "00111";
 							MemRead_mem 	<= '1';
 							rd_mem			<= "00110";
 							report "=================================================================================  " severity warning;
@@ -1035,8 +1035,8 @@ begin
 							
 							
 				when 10 => 	--Terminaram as instru��es do programa 
-							rs1_id_ex		<= "00000";
-							rs2_id_ex		<= "00110";
+							-- rs1_id_ex		<= "00000";
+							-- rs2_id_ex		<= "00110";
 							rd_mem			<= "00000";
 							MemRead_mem 	<= '0';
 							ula_mem 		<= x"00000000";
