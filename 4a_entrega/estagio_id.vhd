@@ -248,17 +248,29 @@ architecture behav of estagio_id is
                             id_PC_src <= '1';
                             id_Branch_nop <= '1';
                             exception <= '0';
+                        else 
+                            id_PC_src <= '0';
+                            id_Branch_nop <= '0';
+                            exception <= '0';
                         end if;
                     when "001" => -- BNE
                         if (branch_Data_A /= branch_Data_B) then
                             id_PC_src <= '1';
                             id_Branch_nop <= '1';
                             exception <= '0';
+                        else 
+                            id_PC_src <= '0';
+                            id_Branch_nop <= '0';
+                            exception <= '0';
                         end if;
                     when "100" => -- BLT
                         if (signed(branch_Data_A) < signed(branch_Data_B)) then
                             id_PC_src <= '1';
                             id_Branch_nop <= '1';
+                            exception <= '0';
+                        else
+                            id_PC_src <= '0';
+                            id_Branch_nop <= '0';
                             exception <= '0';
                         end if;
                     when others =>
