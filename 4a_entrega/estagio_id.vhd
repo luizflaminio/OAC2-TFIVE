@@ -86,24 +86,24 @@ architecture behav of estagio_id is
 
     -- Sinais para decodificação da instrução
     signal PC_id          : std_logic_vector(31 downto 0);
-    signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal opcode         : std_logic_vector(6 downto 0);
-    signal rs1, rs2, rd   : std_logic_vector(4 downto 0);
     signal funct3         : std_logic_vector(2 downto 0);
     signal funct7         : std_logic_vector(6 downto 0);
     signal imm            : std_logic_vector(19 downto 0);
     signal imm_type       : std_logic_vector(1 downto 0);
-    signal imm_ext        : std_logic_vector(31 downto 0);
-    signal gpr_rs1        : std_logic_vector(31 downto 0);
-    signal gpr_rs2        : std_logic_vector(31 downto 0);
     signal branch_Data_A  : std_logic_vector(31 downto 0);
     signal branch_Data_B  : std_logic_vector(31 downto 0);
-    signal aluop_id       : std_logic_vector(2 downto 0);
-    signal alusrc_id      : std_logic;
-    signal memread_id     : std_logic;
-    signal memwrite_id    : std_logic;
-    signal regwrite_id    : std_logic;
     signal memtoreg_id    : std_logic_vector(1 downto 0);
+    signal regwrite_id    : std_logic;
+    signal memwrite_id    : std_logic;
+    signal memread_id     : std_logic;
+    signal alusrc_id      : std_logic;
+    signal aluop_id       : std_logic_vector(2 downto 0);
+    signal PC_plus_4      : std_logic_vector(31 downto 0);
+    signal imm_ext        : std_logic_vector(31 downto 0);
+    signal rd, rs2, rs1   : std_logic_vector(4 downto 0);
+    signal gpr_rs2        : std_logic_vector(31 downto 0);
+    signal gpr_rs1        : std_logic_vector(31 downto 0);
     signal exception      : std_logic := '0';
     signal SEPC           : std_logic_vector(31 downto 0) := x"00000000";
     signal SCAUSE         : std_logic_vector(1 downto 0) := "00";
@@ -297,12 +297,12 @@ architecture behav of estagio_id is
                 id_Branch_nop <= '1';
                 exception <= '0';
             elsif opcode = "0000000" then -- NOP
-                memtoreg_id <= "01"; -- saida ULA
-                regwrite_id <= '1';
+                memtoreg_id <= "00"; -- saida ULA
+                regwrite_id <= '0';
                 memwrite_id <= '0';
                 memread_id <= '0';
-                alusrc_id <= '1';
-                aluop_id <= "011";
+                alusrc_id <= '0';
+                aluop_id <= "000";
                 rd  <= BID(11 downto 7);
                 rs2 <= "00000";
                 rs1 <= BID(19 downto 15);
