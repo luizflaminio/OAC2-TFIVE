@@ -98,10 +98,6 @@ architecture behav of estagio_id is
     signal gpr_rs2        : std_logic_vector(31 downto 0);
     signal branch_Data_A  : std_logic_vector(31 downto 0);
     signal branch_Data_B  : std_logic_vector(31 downto 0);
-    signal base           : std_logic_vector(4 downto 0);
-    signal offset         : std_logic_vector(11 downto 0);
-    signal store_offset   : std_logic_vector(6 downto 0);
-    signal store_ofst     : std_logic_vector(4 downto 0);
     signal aluop_id       : std_logic_vector(2 downto 0);
     signal alusrc_id      : std_logic;
     signal memread_id     : std_logic;
@@ -129,7 +125,7 @@ architecture behav of estagio_id is
             funct7 <= BID(31 downto 25);
         end process;
 
-        decode: process(opcode, funct3, funct7)
+        decode: process(opcode, funct3, funct7, BID)
         begin
             if opcode = "0110011" then -- R-type
                 rd     <= BID(11 downto 7);
@@ -204,9 +200,10 @@ architecture behav of estagio_id is
                         exception <= '1';
                 end case;
             elsif opcode = "0000011" then -- LW
-                rd     <= BID(11 downto 7);
-                base   <= BID(19 downto 15);
-                offset <= BID(31 downto 20);
+                rd  <= BID(11 downto 7);
+                rs1 <= BID(19 downto 15);
+                imm <= "00000000" & BID(31 downto 20);
+                imm_type <= "01";
                 memtoreg_id <= "10"; -- saida memória
                 regwrite_id <= '1';
                 memwrite_id <= '0';
@@ -217,10 +214,10 @@ architecture behav of estagio_id is
                 id_Branch_nop <= '0';
                 exception <= '0';
             elsif opcode = "0100011" then  -- SW
-                store_ofst   <= BID(11 downto 7);
-                base         <= BID(19 downto 15);
-                rs2          <= BID(24 downto 20);
-                store_offset <= BID(31 downto 25);
+                rs1 <= BID(19 downto 15);
+                rd  <= BID(24 downto 20);
+                imm <= "00000000" & BID(31 downto 25) & BID(11 downto 7);
+                imm_type <= "01";
                 memtoreg_id <= "01"; -- saida ULA
                 regwrite_id <= '0'; 
                 memwrite_id <= '1';
@@ -399,22 +396,21 @@ architecture behav of estagio_id is
                 else
                     id_hd_hazard <= '0';
                 end if;               
-    
+                    
+                BEX(151 downto  150) <= memtoreg_id;
+                BEX(149) <= regwrite_id;
+                BEX(148) <= memwrite_id;
+                BEX(147) <= memread_id; 
+                BEX(146) <= alusrc_id;
+                BEX(145 downto 143) <= aluop_id;
+                BEX(142 downto 138) <= rd;
+                BEX(137 downto 133) <= rs2;
+                BEX(132 downto 128) <= rs1;
+                BEX(127 downto 96) <= PC_plus_4;
+                BEX(95 downto 64) <= imm_ext;
+                BEX(63 downto 32) <= gpr_rs2;
+                BEX(31 downto 0) <= gpr_rs1;
             end if;
-            
-            BEX(151 downto  150) <= memtoreg_id;
-            BEX(149) <= regwrite_id;
-            BEX(148) <= memwrite_id;
-            BEX(147) <= memread_id; 
-            BEX(146) <= alusrc_id;
-            BEX(145 downto 143) <= aluop_id;
-            BEX(142 downto 138) <= rd;
-            BEX(137 downto 133) <= rs2;
-            BEX(132 downto 128) <= rs1;
-            BEX(127 downto 96) <= PC_plus_4;
-            BEX(95 downto 64) <= imm_ext;
-            BEX(63 downto 32) <= gpr_rs2;
-            BEX(31 downto 0) <= gpr_rs1;
 
             rs1_id_ex <= rs1;
             rs2_id_ex <= rs2;
