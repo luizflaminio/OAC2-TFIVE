@@ -121,9 +121,9 @@ begin
 
 	ula_mux_b: process(s_forwardB, s_rs2_data, ula_mem, writedata_wb):
 		begin
-			if(s_forwardA = "00") then -- definir os valores de cada um a ser utilizado
+			if(s_forwardB = "00") then -- definir os valores de cada um a ser utilizado
 				s_alu_mux_b <= s_rs2_data;
-			elsif(s_forwardA = "01") then
+			elsif(s_forwardB = "01") then
 				s_alu_mux_b <= ula_mem;
 			elsif(s_forwarA = "10") then
 				s_alu_mux_b <= writedata_wb;
