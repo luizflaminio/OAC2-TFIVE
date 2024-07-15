@@ -72,10 +72,10 @@ architecture behavioral of estagio_ex is
 	signal s_rd_ex: std_logic_vector (4 downto 0);
 
 begin
-	-- forwarding_unit: process:
-		-- Esse processo vai gerar os sinais de forward (para a saída e para uso interno)
-		-- Pode fazer primeiro o código e depois decidir quais dados são uteis para a lista de dependencias
-		-- Chamei os sinais de s_forwardA e s_forwardB para ficar igual ao relatorio e abstrair a fim de poder avançar com a ULA
+	s_RegWrite_ex <= BEX(149);
+	s_rd_ex <= BEX(142 downto 138);
+
+	-- forwarding_unit: process
 	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex):
 		begin
 			if (RegWrite_mem 
@@ -153,8 +153,5 @@ begin
 	ULA_ex <= s_alu_result;
 	ex_fw_A_Branch <= s_forwardA;
 	ex_fw_B_Branch <= s_forwardB;
-
-	-- s_MemRead_ex <= Leitura da memória no ex - Só copiar o que vem do ID?? 
-	-- s_rd_ex <= Destino dos regs no ex - Só copiar o que vem do ID?? 
-	-- s_RegWrite_ex <= Escrita nos regs. no  ex - Só copiar o que vem do ID?? 
+	MemRead_ex <= BEX(147);
 end behavioral;
