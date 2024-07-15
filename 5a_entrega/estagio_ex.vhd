@@ -68,12 +68,34 @@ architecture behavioral of estagio_ex is
 	signal s_aluop: std_logic_vector(2 downto 0);
 	signal s_forwardA, s_forwardB: std_logic_vector(1 downto 0);
 	signal s_alusrc: std_logic;
+	signal s_RegWrite_ex: std_logic;
+	signal s_rd_ex: std_logic_vector (4 downto 0);
 
 begin
 	-- forwarding_unit: process:
 		-- Esse processo vai gerar os sinais de forward (para a saída e para uso interno)
 		-- Pode fazer primeiro o código e depois decidir quais dados são uteis para a lista de dependencias
 		-- Chamei os sinais de s_forwardA e s_forwardB para ficar igual ao relatorio e abstrair a fim de poder avançar com a ULA
+	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex):
+		begin
+			if (RegWrite_mem 
+			and (rd_mem != "0000")
+			and (not (s_RegWrite_ex and (s_rd_ex != "0000") and (s_rd_ex == rs1_id_ex)))
+			and (rd_mem == rs1_id_ex) ) then
+				s_forwardA <= "01";
+			else 
+				s_forwardA <= "00";
+			end if;
+
+			if (RegWrite_mem 
+			and (rd_mem != "0000") 
+			and (not (s_RegWrite_ex and (s_rd_ex != "0000") and (s_rd_ex == rs2_id_ex))) 
+			and (rd_mem == rs2_id_ex) ) then
+				s_forwardB <= "01";
+			else 
+				s_forwardB <= "00";
+			end if;
+		end process;
 
 	ula_control: process(BEX):
 		begin
@@ -132,6 +154,7 @@ begin
 	ex_fw_A_Branch <= s_forwardA;
 	ex_fw_B_Branch <= s_forwardB;
 
-	-- MemRead_ex <= Leitura da memória no ex - Só copiar o que vem do ID?? 
-	-- rd_ex <= Destino dos regs no ex - Só copiar o que vem do ID?? 
+	-- s_MemRead_ex <= Leitura da memória no ex - Só copiar o que vem do ID?? 
+	-- s_rd_ex <= Destino dos regs no ex - Só copiar o que vem do ID?? 
+	-- s_RegWrite_ex <= Escrita nos regs. no  ex - Só copiar o que vem do ID?? 
 end behavioral;
