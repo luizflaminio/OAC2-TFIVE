@@ -75,6 +75,13 @@ begin
 	s_RegWrite_ex <= BEX(149);
 	s_rd_ex <= BEX(142 downto 138);
 
+	set_COP_mem: process(clock)
+	begin
+		if rising_edge(clock) then
+			COP_mem <= COP_ex;
+		end if;
+	end process;
+
 	-- forwarding_unit: process
 	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex):
 		begin
@@ -154,4 +161,20 @@ begin
 	ex_fw_A_Branch <= s_forwardA;
 	ex_fw_B_Branch <= s_forwardB;
 	MemRead_ex <= BEX(147);
+
+	process(clock)
+	begin
+		if rising_edge(clock) then
+			BMEM(115 downto 114) <= BEX(151 downto 150);
+			BMEM(113)            <= BEX(149);
+			BMEM(112)            <= BEX(148);
+			BMEM(111)            <= BEX(147);
+			BMEM(110 downto 79)  <= BEX(127 downto 96);
+			BMEM(78 downto 47)   <= s_alu_result;
+			BMEM(46 downto 15)   <= BEX(63 downto 32);
+			BMEM(14 downto 10)   <= rs1_id_ex;
+			BMEM(9 downto 5)     <= rs2_id_ex;
+			BMEM(4 downto 0)     <= BEX(142 downto 138);
+		end if;
+	end process
 end behavioral;
