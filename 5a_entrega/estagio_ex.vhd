@@ -74,6 +74,7 @@ architecture behavioral of estagio_ex is
 begin
 	s_RegWrite_ex <= BEX(149);
 	s_rd_ex <= BEX(142 downto 138);
+	rd_ex <= BEX(142 downto 138);
 
 	set_COP_mem: process(clock)
 	begin
@@ -83,28 +84,28 @@ begin
 	end process;
 
 	-- forwarding_unit: process
-	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex):
+	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex)
 		begin
-			if (RegWrite_mem 
-			and (rd_mem != "0000")
-			and (not (s_RegWrite_ex and (s_rd_ex != "0000") and (s_rd_ex == rs1_id_ex)))
-			and (rd_mem == rs1_id_ex) ) then
+			if (RegWrite_mem = '1'
+			and (rd_mem /= "0000")
+			and (not (s_RegWrite_ex = '1' and (s_rd_ex /= "0000") and (s_rd_ex = rs1_id_ex)))
+			and (rd_mem = rs1_id_ex) ) then
 				s_forwardA <= "01";
 			else 
 				s_forwardA <= "00";
 			end if;
 
-			if (RegWrite_mem 
-			and (rd_mem != "0000") 
-			and (not (s_RegWrite_ex and (s_rd_ex != "0000") and (s_rd_ex == rs2_id_ex))) 
-			and (rd_mem == rs2_id_ex) ) then
+			if (RegWrite_mem = '1'
+			and (rd_mem /= "0000") 
+			and (not (s_RegWrite_ex = '1' and (s_rd_ex /= "0000") and (s_rd_ex = rs2_id_ex))) 
+			and (rd_mem = rs2_id_ex) ) then
 				s_forwardB <= "01";
 			else 
 				s_forwardB <= "00";
 			end if;
 		end process;
 
-	ula_control: process(BEX):
+	ula_control: process(BEX)
 		begin
 			s_aluop <= BEX(145 downto 143);
 			s_alusrc <= BEX(146);
@@ -113,33 +114,33 @@ begin
 			s_imm_ext <= BEX(95 downto 64);
 	end process;
 	
-	ula_src_a: process(s_forwardA, s_rs1_data, ula_mem, writedata_wb):
+	ula_src_a: process(s_forwardA, s_rs1_data, ula_mem, writedata_wb)
 		begin
 			if(s_forwardA = "00") then -- definir os valores de cada um a ser utilizado
 				s_ula_src_a <= s_rs1_data;
 			elsif(s_forwardA = "01") then
 				s_ula_src_a <= ula_mem;
-			elsif(s_forwarA = "10") then
+			elsif(s_forwardA = "10") then
 				s_ula_src_a <= writedata_wb;
 			else
 				s_ula_src_a <= s_ula_src_a;
 			end if;
 		end process;
 
-	ula_mux_b: process(s_forwardB, s_rs2_data, ula_mem, writedata_wb):
+	ula_mux_b: process(s_forwardB, s_rs2_data, ula_mem, writedata_wb)
 		begin
 			if(s_forwardB = "00") then -- definir os valores de cada um a ser utilizado
 				s_alu_mux_b <= s_rs2_data;
 			elsif(s_forwardB = "01") then
 				s_alu_mux_b <= ula_mem;
-			elsif(s_forwarA = "10") then
+			elsif(s_forwardA = "10") then
 				s_alu_mux_b <= writedata_wb;
 			else
 				s_alu_mux_b <= s_alu_mux_b;
 			end if;
 		end process;
 
-	ula_src_b: process(s_alusrc, s_imm_ext, s_alu_mux_b):
+	ula_src_b: process(s_alusrc, s_imm_ext, s_alu_mux_b)
 		begin
 			if(s_alusrc = '1') then -- definir os valores de cada um a ser utilizado
 				s_ula_src_b <= s_imm_ext;
@@ -150,10 +151,10 @@ begin
 	-- ULA: instanciada estruturalmente:
 	ula: alu
 		port map(
-			in_a => s_ula_src_a;
-			in_b => s_ula_src_b;
-			ALUOp => s_aluop;
-			ULA => s_alu_result;
+			in_a => s_ula_src_a,
+			in_b => s_ula_src_b,
+			ALUOp => s_aluop,
+			ULA => s_alu_result,
 			zero => open -- ver se tem alguma utilidade
 		);
 
@@ -172,9 +173,9 @@ begin
 			BMEM(110 downto 79)  <= BEX(127 downto 96);
 			BMEM(78 downto 47)   <= s_alu_result;
 			BMEM(46 downto 15)   <= BEX(63 downto 32);
-			BMEM(14 downto 10)   <= rs1_id_ex;
-			BMEM(9 downto 5)     <= rs2_id_ex;
+			BMEM(14 downto 10)   <= BEX(132 downto 128);
+			BMEM(9 downto 5)     <= BEX(137 downto 133);
 			BMEM(4 downto 0)     <= BEX(142 downto 138);
 		end if;
-	end process
+	end process;
 end behavioral;
