@@ -161,7 +161,7 @@ architecture behav of estagio_id is
                 memread_id <= '0';
                 alusrc_id <= '1';
                 rd  <= BID(11 downto 7);
-                rs2 <= "00000";
+                rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "01";
@@ -210,7 +210,7 @@ architecture behav of estagio_id is
                 alusrc_id <= '1';
                 aluop_id <= "000";
                 rd  <= BID(11 downto 7);
-                rs2 <= "00000";
+                rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "01";
@@ -288,8 +288,8 @@ architecture behav of estagio_id is
                 alusrc_id <= '0';
                 aluop_id <= "000";
                 rd <= BID(11 downto 7);
-                rs2 <= "00000";
-                rs1 <= "00000";
+                rs2    <= BID(24 downto 20);
+                rs1    <= BID(19 downto 15);
                 imm <= BID(31) & BID(19 downto 12) & BID(22) & BID(30 downto 21);
                 imm_type <= "10";
                 id_PC_src <= '1';
@@ -303,7 +303,7 @@ architecture behav of estagio_id is
                 alusrc_id <= '1';
                 aluop_id <= "000";
                 rd <= BID(11 downto 7);
-                rs2 <= "00000";
+                rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "00";
@@ -318,7 +318,7 @@ architecture behav of estagio_id is
                 alusrc_id <= '0';
                 aluop_id <= "000";
                 rd  <= BID(11 downto 7);
-                rs2 <= "00000";
+                rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
                 imm <= x"00000";
                 imm_type <= "01"; 
@@ -417,23 +417,23 @@ architecture behav of estagio_id is
             end if;
         end process;
 
-        hazard_process: process(MemRead_ex, rs2, rs1, rd_ex)
+        hazard_process: process(MemRead_ex, rs2, rs1, rd_ex, opcode)
         begin
             if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                 id_hd_hazard <= '1';
             elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
+                id_hd_hazard <= '1';
+            elsif ((opcode = "0100011") and (s_COP_id = SW) and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                 id_hd_hazard <= '1';
             elsif MemRead_ex = '0' then
                 id_hd_hazard <= '0';
             end if;  
         end process;
 
-        set_rs_id_ex: process(rs1, rs2, clock)
+        set_rs_id_ex: process(rs1, rs2)
         begin
-            if falling_edge(clock) then
-                rs1_id_ex <= rs1;
-                rs2_id_ex <= rs2;
-            end if;
+            rs1_id_ex <= rs1;
+            rs2_id_ex <= rs2;
         end process;
 
         -- Comportamental
