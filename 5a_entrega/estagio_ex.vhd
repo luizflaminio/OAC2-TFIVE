@@ -84,22 +84,20 @@ begin
 	end process;
 
 	-- forwarding_unit: process
-	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, s_RegWrite_ex, s_rd_ex)
+	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, rd_wb, s_RegWrite_ex, s_rd_ex)
 		begin
-			if (RegWrite_mem = '1'
-			and (rd_mem /= "0000")
-			and (not (s_RegWrite_ex = '1' and (s_rd_ex /= "0000") and (s_rd_ex = rs1_id_ex)))
-			and (rd_mem = rs1_id_ex) ) then
+			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = rs1_id_ex)) then
 				s_forwardA <= "01";
+			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = rs1_id_ex)) then
+				s_forwardA <= "10";
 			else 
 				s_forwardA <= "00";
 			end if;
 
-			if (RegWrite_mem = '1'
-			and (rd_mem /= "0000") 
-			and (not (s_RegWrite_ex = '1' and (s_rd_ex /= "0000") and (s_rd_ex = rs2_id_ex))) 
-			and (rd_mem = rs2_id_ex) ) then
+			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = rs2_id_ex)) then
 				s_forwardB <= "01";
+			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = rs2_id_ex)) then
+				s_forwardB <= "10";
 			else 
 				s_forwardB <= "00";
 			end if;
@@ -116,27 +114,23 @@ begin
 	
 	ula_src_a: process(s_forwardA, s_rs1_data, ula_mem, writedata_wb)
 		begin
-			if(s_forwardA = "00") then -- definir os valores de cada um a ser utilizado
-				s_ula_src_a <= s_rs1_data;
-			elsif(s_forwardA = "01") then
+			if(s_forwardA = "01") then -- definir os valores de cada um a ser utilizado
 				s_ula_src_a <= ula_mem;
 			elsif(s_forwardA = "10") then
 				s_ula_src_a <= writedata_wb;
 			else
-				s_ula_src_a <= s_ula_src_a;
+				s_ula_src_a <= s_rs1_data;
 			end if;
 		end process;
 
 	ula_mux_b: process(s_forwardB, s_rs2_data, ula_mem, writedata_wb)
 		begin
-			if(s_forwardB = "00") then -- definir os valores de cada um a ser utilizado
-				s_alu_mux_b <= s_rs2_data;
-			elsif(s_forwardB = "01") then
+			if(s_forwardA = "01") then -- definir os valores de cada um a ser utilizado
 				s_alu_mux_b <= ula_mem;
 			elsif(s_forwardA = "10") then
 				s_alu_mux_b <= writedata_wb;
 			else
-				s_alu_mux_b <= s_alu_mux_b;
+				s_alu_mux_b <= s_rs2_data;
 			end if;
 		end process;
 
