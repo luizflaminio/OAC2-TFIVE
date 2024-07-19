@@ -31,7 +31,7 @@ use work.opcode_converter.all;
 --		keep_simulating: sinal que indica continuação (true) ou parada (false) da simulação.
 -- O BID possui 64 bits alocados da seguinte forma: o ri_if nas posições de 0 a 31 e o PC_if de 32 a 63.
 
-entity estagio_if is
+entity estagio_if_grupo10 is
     generic(
         imem_init_file: string := "imem.txt" -- Nome do arquivo com o conteúdo da memoria de programa
     );
@@ -48,7 +48,7 @@ entity estagio_if is
     );
 end entity;
 
-architecture behav of estagio_if is
+architecture behav of estagio_if_grupo10 is
     
     component ram is
         generic(

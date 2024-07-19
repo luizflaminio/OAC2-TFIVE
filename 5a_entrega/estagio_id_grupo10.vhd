@@ -34,7 +34,7 @@ use work.opcode_converter.all;
 -- A definição dos sinais vindos de outros módulos encontra-se nos comentários da declaração de 
 -- entidade do estágio id.
 
-entity estagio_id is
+entity estagio_id_grupo10 is
     port(
 		-- Entradas
 		clock				: in 	std_logic; 						-- Base de tempo- bancada de teste
@@ -66,7 +66,7 @@ entity estagio_id is
     );
 end entity;
 
-architecture behav of estagio_id is
+architecture behav of estagio_id_grupo10 is
 
     component regfile is
         port(
