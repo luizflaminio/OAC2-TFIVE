@@ -75,7 +75,7 @@ architecture behavioral of estagio_mem_grupo10 is
 			generic map(
 				address_bits    => 32,
 				size            => 4096,
-				ram_init_file   => imem_init_file
+				ram_init_file   => dmem_init_file
 			)
 			port map(
 				clock       => clock,
@@ -84,4 +84,4 @@ architecture behavioral of estagio_mem_grupo10 is
 				data_in     => mem_data,
 				data_out    => mem_val
 			);
-end architecture behavioral
+end architecture behavioral;
