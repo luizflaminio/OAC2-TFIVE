@@ -62,6 +62,14 @@ architecture behavioral of estagio_mem_grupo10 is
 	signal mem_val, mem_data: std_logic_vector(31 downto 0);
 
 	begin
+
+		set_COP_mem: process(clock)
+		begin
+			if rising_edge(clock) then
+				COP_wb <= COP_mem;
+			end if;
+		end process;
+
 		memory_control: process(BMEM)
 			begin
 				mem_read <= BMEM(111);
