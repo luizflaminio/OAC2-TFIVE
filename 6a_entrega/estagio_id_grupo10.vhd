@@ -482,7 +482,7 @@ architecture behav of estagio_id_grupo10 is
                 RegWrite    => RegWrite_wb,
                 read_reg_rs1=> rs1,
                 read_reg_rs2=> rs2,
-                write_reg_rd=> rd,
+                write_reg_rd=> rd_wb,
                 data_in     => writedata_wb,
                 data_out_a  => gpr_rs1,
                 data_out_b  => gpr_rs2
