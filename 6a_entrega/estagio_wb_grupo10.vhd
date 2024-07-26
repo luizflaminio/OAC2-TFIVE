@@ -40,9 +40,9 @@ begin
         MemToReg <= BWB(103 downto 102);
         RegWrite <= BWB(101);
         NPC <= BWB(100 downto 69);
-        ula <= BWB(68 downto 38);
-        Memval <= BWB(37 downto 6);
-        rd <= BWB(5 downto 1);
+        ula <= BWB(68 downto 37);
+        Memval <= BWB(36 downto 5);
+        rd <= BWB(4 downto 0);
     end process;
 
     rd_wb <= rd;

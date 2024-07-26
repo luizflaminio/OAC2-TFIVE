@@ -102,10 +102,10 @@ architecture behav of estagio_mem_grupo10 is
 			COP_wb <= COP_mem;
 			-- ver quais os endereços que vão cada um dos sinais dentro do BWB
 			BWB(103 downto 102) <= MemToReg; -- seletor mux WB
-			BWB(101) <= RegWrite_mem; -- escrita regs para o ID
-			BWB(100 downto 69) <= NPC_mem; -- possivel dado para o WB
-			BWB(68 downto 37) <= ula_mem; -- possivel dado para o WB
-			if MemRead_mem = '1' then
+			BWB(101) <= s_RegWrite_mem; -- escrita regs para o ID
+			BWB(100 downto 69) <= s_NPC_mem; -- possivel dado para o WB
+			BWB(68 downto 37) <= s_ula_mem; -- possivel dado para o WB
+			if s_MemRead_mem = '1' then
 				BWB(36 downto 5) <= s_Memval_mem; -- possivel dado para o WB
 			else 
 				BWB(36 downto 5) <= x"00000000";
@@ -118,12 +118,12 @@ architecture behav of estagio_mem_grupo10 is
 		generic map(
 			address_bits		=> 32,
 			size				=> 4099,
-			data_ram_init_file	=> data_ram_init_file
+			data_ram_init_file	=> dmem_init_file
 		)
 		port map(
 			clock		=> clock,
-			write		=> MemWrite_mem,
-			address		=> ula_mem,
+			write		=> s_MemWrite_mem,
+			address		=> s_ula_mem,
 			data_in		=> dado_rs2_sw,
 			data_out	=> s_Memval_mem
 		);
