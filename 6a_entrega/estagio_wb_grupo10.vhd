@@ -26,3 +26,38 @@ entity estagio_wb_grupo10 is
 		RegWrite_wb		: out std_logic						 -- Sinal de escrita nos registradores
     );
 end entity;
+
+architecture behav of estagio_wb_grupo10 is
+    signal MemToReg: std_logic_vector(1 downto 0);
+    signal RegWrite: std_logic;
+    signal NPC: std_logic_vector(31 downto 0);
+    signal ula: std_logic_vector(31 downto 0);
+    signal Memval: std_logic_vector(31 downto 0);
+    signal rd: std_logic_vector(4 downto 0);
+begin
+    process(BWB)
+    begin
+        MemToReg <= BWB(103 downto 102);
+        RegWrite <= BWB(101);
+        NPC <= BWB(100 downto 69);
+        ula <= BWB(68 downto 38);
+        Memval <= BWB(37 downto 6);
+        rd <= BWB(5 downto 1);
+    end process;
+
+    rd_wb <= rd;
+    RegWrite_wb <= RegWrite;
+
+    mux: process(MemToReg, NPC, ula, Memval)
+    begin
+        if(MemToReg = "00") then -- tipo R, I, SW, B e NOP
+            writedata_wb <= ula;
+        elsif (MemToReg = "01") then -- tipo LW
+            writedata_wb <= Memval;
+        elsif (MemToReg = "10") then -- tipo JAL e JALR
+            writedata_wb <= NPC;
+        else
+            writedata_wb <= (others => '0');
+        end if;
+    end process;
+end architecture;
