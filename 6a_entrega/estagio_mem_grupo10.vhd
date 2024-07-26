@@ -65,7 +65,7 @@ architecture behav of estagio_mem_grupo10 is
 	signal s_MemRead_mem	: std_logic; -- usa aqui
 	signal s_NPC_mem		: std_logic_vector(31 downto 0); -- usa aqui e WB
 	signal s_ula_mem		: std_logic_vector(31 downto 0); -- usa aqui e WB
-	signal dado_arma_mem	: std_logic_vector(31 downto 0); -- usa aqui
+	signal dado_rs2_sw	: std_logic_vector(31 downto 0); -- usa aqui
 	signal rs1_mem		: std_logic_vector(4 downto 0); -- nao usa
 	signal rs2_mem		: std_logic_vector(4 downto 0); -- nao usa
 	signal s_rd_mem		: std_logic_vector(4 downto 0); -- usa aqui e WB
@@ -81,7 +81,7 @@ architecture behav of estagio_mem_grupo10 is
 		s_MemRead_mem <= BMEM(111);
 		s_NPC_mem <= BMEM(110 downto 79);
 		s_ula_mem <= BMEM(78 downto 47);
-		dado_arma_mem <= BMEM(46 downto 15);
+		dado_rs2_sw <= BMEM(46 downto 15);
 		rs1_mem <= BMEM(14 downto 10);
 		rs2_mem <= BMEM(9 downto 5);
 		s_rd_mem <= BMEM(4 downto 0);
@@ -101,16 +101,16 @@ architecture behav of estagio_mem_grupo10 is
 		if rising_edge(clock) then
 			COP_wb <= COP_mem;
 			-- ver quais os endereços que vão cada um dos sinais dentro do BWB
-			BWB <= MemToReg; -- seletor mux WB
-			BWB <= RegWrite_mem; -- escrita regs para o ID
-			BWB <= NPC_mem; -- possivel dado para o WB
-			BWB <= ula_mem; -- possivel dado para o WB
+			BWB(103 downto 102) <= MemToReg; -- seletor mux WB
+			BWB(101) <= RegWrite_mem; -- escrita regs para o ID
+			BWB(100 downto 69) <= NPC_mem; -- possivel dado para o WB
+			BWB(68 downto 37) <= ula_mem; -- possivel dado para o WB
 			if MemRead_mem = '1' then
-				BWB <= s_Memval_mem; -- possivel dado para o WB
+				BWB(36 downto 5) <= s_Memval_mem; -- possivel dado para o WB
 			else 
-				BWB <= '0';
+				BWB(36 downto 5) <= x"00000000";
 			end if;
-			BWB <= s_rd_mem; -- endereço de escrita no ID
+			BWB(4 downto 0) <= s_rd_mem; -- endereço de escrita no ID
 		end if;
 	end process;
 
@@ -124,7 +124,7 @@ architecture behav of estagio_mem_grupo10 is
 			clock		=> clock,
 			write		=> MemWrite_mem,
 			address		=> ula_mem,
-			data_in		=> dado_arma_mem,
+			data_in		=> dado_rs2_sw,
 			data_out	=> s_Memval_mem
 		);
 end architecture;
