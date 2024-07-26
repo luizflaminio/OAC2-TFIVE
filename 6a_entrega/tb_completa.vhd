@@ -30,7 +30,7 @@ end entity;
 
 architecture tb_arch of tb_if_id_ex_mem_wb is
 	-- Estagio de Busca de instru�oes - if com buffer de sa�da - BID
-    component estagio_if_grupo10_grupo10
+    component estagio_if_grupo10
         generic(
             imem_init_file: string := "imem.txt"
         );
@@ -138,7 +138,7 @@ architecture tb_arch of tb_if_id_ex_mem_wb is
 	end component;
 	
 	-- Estagio de Write-Back - wb cominforma�oes de saida para os demais est�gios \
-	component estagio_wb_grupo10_grupo10
+	component estagio_wb_grupo10
 		port (
 			-- Entradas
 			BWB				: in std_logic_vector(103 downto 0); -- Informa�oes vindas do mem
@@ -205,7 +205,7 @@ architecture tb_arch of tb_if_id_ex_mem_wb is
 	
 begin
 	-- Conectando os sinais do est�gio if
-    fetch : estagio_if_grupo10_grupo10 
+    fetch : estagio_if_grupo10
         generic map(
             imem_init_file => "imem.txt"
         )
