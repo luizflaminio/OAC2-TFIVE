@@ -68,7 +68,7 @@ architecture behav of estagio_if_grupo10 is
         );
     end component;
     
-    signal s_halt: std_logic := '0';
+    signal Pare_if  : std_logic := '0';
     signal s_instruction : std_logic_vector(31 downto 0);
     signal ri_if : std_logic_vector(31 downto 0);
     signal s_PC  : std_logic_vector(31 downto 0) := x"00000000";
@@ -78,7 +78,7 @@ architecture behav of estagio_if_grupo10 is
 
 begin
     s_pc_plus_4 <= std_logic_vector(unsigned(s_PC) + 4);
-    COP_IF <= decode(ri_if);
+    COP_IF <= decode(ri_if) when Pare_if = '0' else HALT;
 
     pc_source_process: process(id_PC_src, s_pc_plus_4, id_Jump_PC)
         begin
@@ -92,7 +92,7 @@ begin
     pc_process: process(clock)
     begin
         if(rising_edge(clock)) then
-            if(id_hd_hazard = '0' and s_halt = '0') then
+            if(id_hd_hazard = '0' and Pare_if = '0') then
                 S_PC <= s_pc_mux;
             else
                 S_PC <= S_PC;
@@ -119,7 +119,7 @@ begin
     halt: process
     begin
         wait until (ri_if = x"0000006F" and falling_edge(clock));
-        s_halt <= '1';
+        Pare_if <= '1';
     end process;
 
     stop_simulation: process

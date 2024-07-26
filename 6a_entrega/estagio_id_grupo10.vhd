@@ -98,6 +98,7 @@ architecture behav of estagio_id_grupo10 is
     signal memwrite_id    : std_logic;
     signal memread_id     : std_logic;
     signal alusrc_id      : std_logic;
+    signal Pare_id        : std_logic;
     signal aluop_id       : std_logic_vector(2 downto 0);
     signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal imm_ext        : std_logic_vector(31 downto 0);
@@ -108,12 +109,23 @@ architecture behav of estagio_id_grupo10 is
     signal SEPC           : std_logic_vector(31 downto 0) := x"00000000";
     signal SCAUSE         : std_logic_vector(1 downto 0) := "00";
     signal s_COP_id	      : instruction_type  := NOP;
+    constant c_HALT       : instruction_type := HALT;
 
     begin
 
-        set_COP_id: process(s_COP_id)
+        set_COP_id: process(s_COP_id, Pare_id)
         begin
-            COP_id <= s_COP_id;
+            if Pare_id = '1' then
+                COP_id <= c_HALT;
+            else
+                COP_id <= s_COP_id;
+            end if ;
+        end process;
+
+        halt: process 
+        begin
+            wait until s_COP_id = c_HALT;
+            Pare_id <= '1';
         end process;
 
         set_opcode: process(BID)
@@ -455,7 +467,7 @@ architecture behav of estagio_id_grupo10 is
                     BEX(95 downto 64) <= imm_ext;
                     BEX(63 downto 32) <= gpr_rs2;
                     BEX(31 downto 0) <= gpr_rs1;
-                    COP_ex <= s_COP_id;
+                    COP_ex <= COP_id;
                 else 
                     BEX(151 downto  150) <= "00";
                     BEX(149) <= '0';
