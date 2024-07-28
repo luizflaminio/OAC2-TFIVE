@@ -68,12 +68,23 @@ architecture behavioral of estagio_ex_grupo10 is
 	signal s_aluop: std_logic_vector(2 downto 0);
 	signal s_forwardA, s_forwardB: std_logic_vector(1 downto 0);
 	signal s_alusrc: std_logic;
-	signal s_RegWrite_ex: std_logic;
 	signal s_rd_ex: std_logic_vector (4 downto 0);
+	signal s_MemToReg_ex: std_logic_vector(1 downto 0);
+	signal s_RegWrite_ex: std_logic;
+	signal s_MemWrite_ex: std_logic;
+	signal s_NPC_ex, s_dado_arma_ex : std_logic_vector(31 downto 0);
+	signal s_rs1, s_rs2: std_logic_vector(4 downto 0);
 
 begin
+	s_MemToReg_ex <= BEX(151 downto 150);
 	s_RegWrite_ex <= BEX(149);
+	s_MemWrite_ex <= BEX(148);
+	MemRead_ex <= BEX(147);
+	s_NPC_ex <= BEX(127 downto 96);
+	s_dado_arma_ex <= BEX(63 downto 32);
 	s_rd_ex <= BEX(142 downto 138);
+	s_rs2 <= BEX(137 downto 133);
+	s_rs1 <= BEX(132 downto 128);
 	rd_ex <= BEX(142 downto 138);
 
 	set_COP_mem: process(clock)
@@ -86,17 +97,17 @@ begin
 	-- forwarding_unit: process
 	forwarding_unit: process(rs1_id_ex, rs2_id_ex, RegWrite_mem, rd_mem, rd_wb, s_RegWrite_ex, s_rd_ex)
 		begin
-			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = rs1_id_ex)) then
+			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = s_rs1)) then
 				s_forwardA <= "01";
-			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = rs1_id_ex)) then
+			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = s_rs1)) then
 				s_forwardA <= "10";
 			else 
 				s_forwardA <= "00";
 			end if;
 
-			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = rs2_id_ex)) then
+			if (RegWrite_mem = '1'and rd_mem /= "0000" and (rd_mem = s_rs2)) then
 				s_forwardB <= "01";
-			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = rs2_id_ex)) then
+			elsif (RegWrite_wb = '1' and rd_wb /= "0000" and (rd_wb = s_rs2)) then
 				s_forwardB <= "10";
 			else 
 				s_forwardB <= "00";
@@ -125,9 +136,9 @@ begin
 
 	ula_mux_b: process(s_forwardB, s_rs2_data, ula_mem, writedata_wb)
 		begin
-			if(s_forwardA = "01") then -- definir os valores de cada um a ser utilizado
+			if(s_forwardB = "01") then -- definir os valores de cada um a ser utilizado
 				s_alu_mux_b <= ula_mem;
-			elsif(s_forwardA = "10") then
+			elsif(s_forwardB = "10") then
 				s_alu_mux_b <= writedata_wb;
 			else
 				s_alu_mux_b <= s_rs2_data;
@@ -155,21 +166,24 @@ begin
 	ULA_ex <= s_alu_result;
 	ex_fw_A_Branch <= s_forwardA;
 	ex_fw_B_Branch <= s_forwardB;
-	MemRead_ex <= BEX(147);
 
 	process(clock)
 	begin
 		if rising_edge(clock) then
-			BMEM(115 downto 114) <= BEX(151 downto 150);
-			BMEM(113)            <= BEX(149);
-			BMEM(112)            <= BEX(148);
-			BMEM(111)            <= BEX(147);
-			BMEM(110 downto 79)  <= BEX(127 downto 96);
+			BMEM(115 downto 114) <= s_MemToReg_ex;
+			BMEM(113)            <= s_RegWrite_ex;
+			BMEM(112)            <= s_MemWrite_ex;
+			BMEM(111)            <= BEX(147); -- MemRead_ex
+			BMEM(110 downto 79)  <= s_NPC_ex;
 			BMEM(78 downto 47)   <= s_alu_result;
-			BMEM(46 downto 15)   <= BEX(63 downto 32);
-			BMEM(14 downto 10)   <= BEX(132 downto 128);
-			BMEM(9 downto 5)     <= BEX(137 downto 133);
-			BMEM(4 downto 0)     <= BEX(142 downto 138);
+			if (s_forwardB = "10") then
+				BMEM(46 downto 15) <= writedata_wb;
+			else
+				BMEM(46 downto 15) <= s_dado_arma_ex;
+			end if;
+			BMEM(14 downto 10)   <= s_rs1;
+			BMEM(9 downto 5)     <= s_rs2;
+			BMEM(4 downto 0)     <= s_rd_ex;
 		end if;
 	end process;
 end behavioral;
