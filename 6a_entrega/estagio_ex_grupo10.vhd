@@ -114,6 +114,30 @@ begin
 			end if;
 		end process;
 
+		-- forwarding branch
+		forwarding_branch: process(rs1_id_ex, rs2_id_ex, s_rd_ex, rd_mem, s_RegWrite_ex, RegWrite_mem, s_MemToReg_ex)
+		begin
+			if(rs1_id_ex = s_rd_ex and s_RegWrite_ex = '1' and s_MemToReg_ex = "00") then
+				ex_fw_A_Branch <= "10";
+			elsif (rs1_id_ex = rd_mem and RegWrite_mem = '1' and s_MemToReg_ex = "00") then
+				ex_fw_A_Branch <= "01";
+			elsif (rs1_id_ex = rd_mem and s_MemToReg_ex = "10") then
+				ex_fw_A_Branch <= "11";
+			else
+				ex_fw_A_Branch <= "00";
+			end if;
+
+			if(rs2_id_ex = s_rd_ex and s_RegWrite_ex = '1' and s_MemToReg_ex = "00") then
+				ex_fw_B_Branch <= "10";
+			elsif (rs2_id_ex = rd_mem and RegWrite_mem = '1' and s_MemToReg_ex = "00") then
+				ex_fw_B_Branch <= "01";
+			elsif (rs2_id_ex = rd_mem and s_MemToReg_ex = "10") then
+				ex_fw_B_Branch <= "11";
+			else
+				ex_fw_B_Branch <= "00";
+			end if;
+		end process;
+
 	ula_control: process(BEX)
 		begin
 			s_aluop <= BEX(145 downto 143);
@@ -164,8 +188,6 @@ begin
 		);
 
 	ULA_ex <= s_alu_result;
-	ex_fw_A_Branch <= s_forwardA;
-	ex_fw_B_Branch <= s_forwardB;
 
 	process(clock)
 	begin

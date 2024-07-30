@@ -137,7 +137,7 @@ architecture behav of estagio_id_grupo10 is
             funct7 <= BID(31 downto 25);
         end process;
 
-        decode: process(opcode, funct3, funct7, BID)
+        decode: process(opcode, funct3, funct7, BID, branch_Data_A, branch_Data_B)
         begin
             if opcode = "0110011" then -- R-type
                 memtoreg_id <= "00"; 
@@ -406,13 +406,13 @@ architecture behav of estagio_id_grupo10 is
             end if;
         end process;
 
-        forwarding_process: process(ex_fw_A_Branch, ex_fw_B_Branch)
+        forwarding_process: process(ex_fw_A_Branch, ex_fw_B_Branch, gpr_rs1, ula_ex, writedata_wb)
         begin
             if(ex_fw_A_Branch = "00") then
                 branch_Data_A <= gpr_rs1;
-            elsif(ex_fw_A_Branch = "01") then 
+            elsif(ex_fw_A_Branch = "10") then 
                 branch_Data_A <= ula_ex;
-            elsif(ex_fw_A_Branch = "10") then
+            elsif(ex_fw_A_Branch = "01") then
                 branch_Data_A <= writedata_wb;
             else 
                 branch_Data_A <= x"00000000";
@@ -420,20 +420,22 @@ architecture behav of estagio_id_grupo10 is
 
             if(ex_fw_B_Branch = "00") then
                 branch_Data_B <= gpr_rs2;
-            elsif(ex_fw_B_Branch = "01") then 
+            elsif(ex_fw_B_Branch = "10") then 
                 branch_Data_B <= ula_ex;
-            elsif(ex_fw_B_Branch = "10") then
+            elsif(ex_fw_B_Branch = "01") then
                 branch_Data_B <= writedata_wb;
             else 
                 branch_Data_B <= x"00000000";
             end if;
         end process;
 
-        hazard_process: process(MemRead_ex, rs2, rs1, rd_ex, opcode)
+        hazard_process: process(MemRead_ex, MemRead_mem, rs2, rs1, rd_ex, rd_mem, opcode, s_COP_id, RegWrite_wb)
         begin
             if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                 id_hd_hazard <= '1';
             elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
+                id_hd_hazard <= '1';
+            elsif (RegWrite_wb = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
                 id_hd_hazard <= '1';
             elsif ((opcode = "0100011") and (s_COP_id = SW) and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
                 id_hd_hazard <= '1';
@@ -442,11 +444,8 @@ architecture behav of estagio_id_grupo10 is
             end if;  
         end process;
 
-        set_rs_id_ex: process(rs1, rs2)
-        begin
-            rs1_id_ex <= rs1;
-            rs2_id_ex <= rs2;
-        end process;
+        rs1_id_ex <= rs1;
+        rs2_id_ex <= rs2;
 
         -- Comportamental
         process(clock)
