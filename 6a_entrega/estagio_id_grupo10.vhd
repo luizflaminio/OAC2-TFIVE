@@ -431,15 +431,15 @@ architecture behav of estagio_id_grupo10 is
 
         hazard_process: process(MemRead_ex, MemRead_mem, rs2, rs1, rd_ex, rd_mem, opcode, s_COP_id, RegWrite_wb)
         begin
-            if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
+            if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex)) and rd_ex /= "00000") then
                 id_hd_hazard <= '1';
-            elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
+            elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem)) and rd_mem /= "00000") then
                 id_hd_hazard <= '1';
-            elsif (RegWrite_wb = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem))) then
+            elsif (RegWrite_wb = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem)) and rd_mem /= "00000") then
                 id_hd_hazard <= '1';
-            elsif ((opcode = "0100011") and (s_COP_id = SW) and ((rs1 = rd_ex) or (rs2 = rd_ex))) then
+            elsif ((opcode = "0100011") and (s_COP_id = SW) and ((rs1 = rd_ex) or (rs2 = rd_ex)) and rd_ex /= "00000") then
                 id_hd_hazard <= '1';
-            elsif MemRead_ex = '0' then
+            else
                 id_hd_hazard <= '0';
             end if;  
         end process;
