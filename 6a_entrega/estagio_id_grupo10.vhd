@@ -302,7 +302,7 @@ architecture behav of estagio_id_grupo10 is
                 rd <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1    <= BID(19 downto 15);
-                imm <= BID(31) & BID(19 downto 12) & BID(22) & BID(30 downto 21);
+                imm <= BID(31) & BID(19 downto 12) & BID(20) & BID(30 downto 21);
                 imm_type <= "10";
                 id_PC_src <= '1';
                 id_Branch_nop <= '1';
@@ -350,9 +350,9 @@ architecture behav of estagio_id_grupo10 is
                 when "00" =>
                     -- Extensão para Branch (12 bits)
                     if imm(11) = '0' then
-                        imm_ext <= "0000000000000000000" & imm(11 downto 0) & '0'; -- Zero extension + bit 0
+                        imm_ext <= ("00000000000000000000" & imm(11 downto 0)) and x"FFFFFFFE"; -- Zero extension + bit 0
                     else
-                        imm_ext <= "1111111111111111111" & imm(11 downto 0) & '0'; -- Sign extension + bit 0
+                        imm_ext <= ("11111111111111111111" & imm(11 downto 0)) and x"FFFFFFFE"; -- Sign extension + bit 0
                     end if;
                 when "01" =>
                     -- Extensão para outros (12 bits)
@@ -364,21 +364,21 @@ architecture behav of estagio_id_grupo10 is
                 when "10" =>
                     -- Extensão para Jump (20 bits)
                     if imm(19) = '0' then
-                        imm_ext <= "00000000000" & imm(19 downto 0) & '0'; -- Zero extension + bit 0
+                        imm_ext <= ("000000000000" & imm(19 downto 0)) and x"FFFFFFFE"; -- Zero extension + bit 0
                     else
-                        imm_ext <= "11111111111" & imm(19 downto 0) & '0'; -- Sign extension + bit 0
+                        imm_ext <= ("111111111111" & imm(19 downto 0)) and x"FFFFFFFE"; -- Sign extension + bit 0
                     end if;
                 when others =>
                     imm_ext <= (others => '0'); -- Caso padrão para evitar latches
             end case;
         end process;
 
-        calc_branch_addrs: process(imm_ext, exception, opcode)
+        calc_branch_addrs: process(imm_ext, exception, opcode, branch_Data_A, PC_id)
         begin
             if exception = '1' then
                 id_Jump_PC <= x"00000400";
             elsif opcode = "1100111" then -- JALR
-                id_Jump_PC <= std_logic_vector(signed(branch_Data_A) + signed(imm_ext));
+                id_Jump_PC <= std_logic_vector(signed(branch_Data_A) + signed(imm_ext)) and x"FFFFFFFE";
             elsif opcode = "1100011" or opcode = "1101111" then -- BRANCH e JAL
                 id_Jump_PC <= std_logic_vector(signed(PC_id) + signed(imm_ext));
             else 
@@ -406,7 +406,7 @@ architecture behav of estagio_id_grupo10 is
             end if;
         end process;
 
-        forwarding_process: process(ex_fw_A_Branch, ex_fw_B_Branch, gpr_rs1, ula_ex, writedata_wb)
+        forwarding_process: process(ex_fw_A_Branch, ex_fw_B_Branch, gpr_rs1, gpr_rs2, ula_ex, writedata_wb)
         begin
             if(ex_fw_A_Branch = "00") then
                 branch_Data_A <= gpr_rs1;
