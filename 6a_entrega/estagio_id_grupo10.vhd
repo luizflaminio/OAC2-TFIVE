@@ -99,6 +99,8 @@ architecture behav of estagio_id_grupo10 is
     signal memread_id     : std_logic;
     signal alusrc_id      : std_logic;
     signal Pare_id        : std_logic;
+    signal rs1_used        : std_logic;
+    signal rs2_used        : std_logic;
     signal aluop_id       : std_logic_vector(2 downto 0);
     signal PC_plus_4      : std_logic_vector(31 downto 0);
     signal imm_ext        : std_logic_vector(31 downto 0);
@@ -148,6 +150,8 @@ architecture behav of estagio_id_grupo10 is
                 rd     <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1    <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '1';
                 imm <= x"00000";
                 imm_type <= "01"; 
                 case funct3 is 
@@ -175,6 +179,8 @@ architecture behav of estagio_id_grupo10 is
                 rd  <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '0';
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "01";
                 case funct3 is 
@@ -224,6 +230,8 @@ architecture behav of estagio_id_grupo10 is
                 rd  <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '0';
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "01";
                 id_PC_src <= '0';
@@ -239,6 +247,8 @@ architecture behav of estagio_id_grupo10 is
                 rd  <= "00000";
                 rs2 <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '1';
                 imm <= "00000000" & BID(31 downto 25) & BID(11 downto 7);
                 imm_type <= "01";
                 id_PC_src <= '0';
@@ -254,6 +264,8 @@ architecture behav of estagio_id_grupo10 is
                 rd <= "00000";
                 rs2 <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '1';
                 imm <= "00000000" & BID(31) & BID(7) & BID(30 downto 25) & BID(11 downto 8);
                 imm_type <= "00";
                 case funct3 is
@@ -302,6 +314,8 @@ architecture behav of estagio_id_grupo10 is
                 rd <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1    <= BID(19 downto 15);
+                rs1_used <= '0';
+                rs2_used <= '0';
                 imm <= BID(31) & BID(19 downto 12) & BID(20) & BID(30 downto 21);
                 imm_type <= "10";
                 id_PC_src <= '1';
@@ -317,6 +331,8 @@ architecture behav of estagio_id_grupo10 is
                 rd <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '1';
+                rs2_used <= '0';
                 imm <= "00000000" & BID(31 downto 20);
                 imm_type <= "00";
                 id_PC_src <= '1';
@@ -332,6 +348,8 @@ architecture behav of estagio_id_grupo10 is
                 rd  <= BID(11 downto 7);
                 rs2    <= BID(24 downto 20);
                 rs1 <= BID(19 downto 15);
+                rs1_used <= '0';
+                rs2_used <= '0';
                 imm <= x"00000";
                 imm_type <= "01"; 
                 id_PC_src <= '0';
@@ -412,32 +430,28 @@ architecture behav of estagio_id_grupo10 is
                 branch_Data_A <= gpr_rs1;
             elsif(ex_fw_A_Branch = "10") then 
                 branch_Data_A <= ula_ex;
-            elsif(ex_fw_A_Branch = "01") then
+            elsif(ex_fw_B_Branch = "01") then 
+                branch_Data_B <= ula_mem;
+            elsif(ex_fw_A_Branch = "11") then
                 branch_Data_A <= writedata_wb;
-            else 
-                branch_Data_A <= x"00000000";
             end if;
 
             if(ex_fw_B_Branch = "00") then
                 branch_Data_B <= gpr_rs2;
             elsif(ex_fw_B_Branch = "10") then 
                 branch_Data_B <= ula_ex;
-            elsif(ex_fw_B_Branch = "01") then
+            elsif(ex_fw_B_Branch = "01") then 
+                branch_Data_B <= ula_mem;
+            elsif(ex_fw_B_Branch = "11") then
                 branch_Data_B <= writedata_wb;
-            else 
-                branch_Data_B <= x"00000000";
             end if;
         end process;
 
-        hazard_process: process(MemRead_ex, MemRead_mem, rs2, rs1, rd_ex, rd_mem, opcode, s_COP_id, RegWrite_wb)
+        hazard_process: process(MemRead_ex, MemRead_mem, rs2, rs1, rs1_used, rs2_used, rd_ex, rd_mem)
         begin
-            if (MemRead_ex = '1' and ((rs1 = rd_ex) or (rs2 = rd_ex)) and rd_ex /= "00000") then
+            if (MemRead_ex = '1' and ((rs1 = rd_ex and rs1_used = '1') or (rs2 = rd_ex and rs2_used = '1')) and rd_ex /= "00000") then
                 id_hd_hazard <= '1';
-            elsif (MemRead_mem = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem)) and rd_mem /= "00000") then
-                id_hd_hazard <= '1';
-            elsif (RegWrite_wb = '1' and ((rs1 = rd_mem) or (rs2 = rd_mem)) and rd_mem /= "00000") then
-                id_hd_hazard <= '1';
-            elsif ((opcode = "0100011") and (s_COP_id = SW) and ((rs1 = rd_ex) or (rs2 = rd_ex)) and rd_ex /= "00000") then
+            elsif (MemRead_mem = '1' and ((rs1 = rd_mem and rs1_used = '1') or (rs2 = rd_mem and rs2_used = '1')) and rd_mem /= "00000") then
                 id_hd_hazard <= '1';
             else
                 id_hd_hazard <= '0';
